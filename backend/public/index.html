@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación SpendTracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header class="bg-gray-800 text-white p-4">
+        <h1 class="text-3xl font-bold">Documentación de la API SpendTracker</h1>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4">
+        <h2 class="text-xl font-semibold">Descripción</h2>
+        <p>Esta es una API RESTful para la gestion de gastos.</p>
+
+        <h3 class="mt-6 text-lg font-semibold">Endpoints disponibles</h3>
+
+        <!-- Sección de Usuarios -->
+        <h4 class="mt-4 text-md font-semibold">1. Registrar Usuario</h4>
+        <p><strong>Método:</strong> POST</p>
+        <p><strong>Ruta:</strong> /auth/register</p>
+        <p><strong>Descripción:</strong> Permite registrar un nuevo usuario.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+POST http://localhost:3000/auth/register
+
+Headers:
+Content-Type: application/json
+
+Body (JSON):
+{
+    "email": "emailexample",
+    "password": "passwordexample"
+}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">2. Iniciar Sesión</h4>
+        <p><strong>Método:</strong> POST</p>
+        <p><strong>Ruta:</strong> /auth/login</p>
+        <p><strong>Descripción:</strong> Inicia sesión y devuelve un token JWT.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+POST http://localhost:3000/auth/login
+
+Headers:
+Content-Type: application/json
+
+Body (JSON):
+{
+    "email": "emailexample",
+    "password": "passwordexample"
+}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">3. Crear un gasto</h4>
+        <p><strong>Método:</strong> POST</p>
+        <p><strong>Ruta:</strong> spend</p>
+        <p><strong>Descripción:</strong> Crea un nuevo gasto.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+POST http://localhost:3000/spend
+
+Headers:
+Authorization: Bearer {token}
+Content-Type: application/json
+
+Body (JSON):
+{
+"title": "Pago de luz",
+"amount": 1500,
+"description": "Factura mensual de electricidad",
+"category": "Servicios",
+"email": "usuario@example.com",
+"sharedEmail": "compartido@example.com"
+}    
+</code>
+        </pre>
+        <!-- Sección de Autores -->
+        <h4 class="mt-4 text-md font-semibold">4. Obtener Todos los gastos</h4>
+        <p><strong>Método:</strong> GET</p>
+        <p><strong>Ruta:</strong> /spend</p>
+        <p><strong>Descripción:</strong> Obtiene una lista de todos los gastos</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+GET http://localhost:3000/spend
+
+Headers:
+Authorization: Bearer {token}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">5. Eliminar un gasto</h4>
+        <p><strong>Método:</strong> DELETE</p>
+        <p><strong>Ruta:</strong> /spend/:id</p>
+        <p><strong>Descripción:</strong> Elimina un gasto por su ID.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+DELETE http://localhost:3000/spend/{id}
+
+Headers:
+Authorization: Bearer {token}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">6. Actualizar un gasto</h4>
+        <p><strong>Método:</strong> PUT</p>
+        <p><strong>Ruta:</strong> /spend/:id</p>
+        <p><strong>Descripción:</strong> Actualiza la información de un gasto existente.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+PUT http://localhost:3000/spend/:id
+
+Headers:
+Authorization: Bearer {token}
+Content-Type: application/json
+</code>
+        </pre>
+
+
+        <h1 class="mt-4 text-xl font-semibold">ENDPOINTS DE BOOKTAGS</h1>
+        <p>No estan en uso actualmente</p>
+        <!-- IMPLEMENTAR  -->
+        <h4 class="mt-4 text-md font-semibold">6. Filtrar Libros</h4>
+        <p><strong>Método:</strong> GET</p>
+        <p><strong>Ruta:</strong> /libros/filter</p>
+        <p><strong>Descripción:</strong> Filtra los libros por (title, yearPublished, genre), devuelve los libros que
+            coincidan con estos parametros</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+GET http://localhost:3000/libros/filter?param=value
+
+Headers:
+Authorization: Bearer {token}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">7. Obtener Libro por ID</h4>
+        <p><strong>Método:</strong> GET</p>
+        <p><strong>Ruta:</strong> /libros/:id</p>
+        <p><strong>Descripción:</strong> Obtiene un libro por su ID.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+GET http://localhost:3000/libros/:id
+
+Headers:
+Authorization: Bearer {token}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">11. Obtener libro por title</h4>
+        <p><strong>Método:</strong> GET</p>
+        <p><strong>Ruta:</strong> /libros/title/:tile</p>
+        <p><strong>Descripción:</strong>Obtener un libro por su titulo</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+GET http://localhost:3000/libros/title/:title
+
+Headers:
+Authorization: Bearer {token}
+</code>
+        </pre>
+
+        <h4 class="mt-4 text-md font-semibold">12. Obtener Libros Ordenados</h4>
+        <p><strong>Método:</strong> GET</p>
+        <p><strong>Ruta:</strong> /libros/sort</p>
+        <p><strong>Descripción:</strong> Obtiene una lista de libros ordenados por el campo especificado en los
+            parámetros de consulta.</p>
+        <pre class="bg-gray-800 p-4 rounded-lg text-white">
+<code>
+GET http://localhost:3000/libros/sort?sort={campo}&order={asc|desc}
+
+Headers:
+Authorization: Bearer {token}
+
+Parámetros de Consulta:
+- sort: Campo por el cual ordenar (por defecto: title). Ejemplo: title, yearPublished, genre, pages.
+- order: Dirección del orden (por defecto: asc). Valores posibles: asc o desc.
+</code>
+</pre>
+
+    </main>
+
+    <footer class="bg-zinc-600 p-4 text-white">
+        <div>
+            <span class="font-bold">Alumno:</span> Lautaro Fernandez Szutner
+        </div>
+        <div>
+            <span class="font-bold">Materia:</span> Aplicaciones Híbridas
+        </div>
+        <div>
+            <span class="font-bold">Docente:</span> MARCOS GALBÁN, Camila Belén
+        </div>
+        <div>
+            <span class="font-bold">Comisión:</span> DWN4AV
+        </div>
+    </footer>
+</body>
+
+</html>

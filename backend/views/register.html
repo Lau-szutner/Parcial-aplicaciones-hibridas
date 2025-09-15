@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | BookTags</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../js/register.js" defer></script> <!-- Incluye el archivo JS -->
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header class="bg-gray-800 text-white p-4">
+        <h1 class="text-3xl font-bold underline">Regístrate - BookTags</h1>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4">
+        <h2 class="text-xl font-semibold">Crea una cuenta</h2>
+
+        <form id="registerForm" class="mt-4 flex flex-col space-y-4">
+            <input id="name" type="text" placeholder="Nombre"
+                class="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            <input id="email" type="email" placeholder="Correo electrónico"
+                class="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            <input id="password" type="password" placeholder="Contraseña"
+                class="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            <button type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none">Registrarse</button>
+        </form>
+
+        <p id="errorMessage" class="text-red-500 mt-2 hidden">Error al registrarse.</p>
+
+        <p class="mt-4">
+            ¿Ya tienes una cuenta? <a href="/login" class="text-indigo-500 underline">Inicia sesión aquí</a>.
+        </p>
+    </main>
+
+    <footer class="bg-zinc-600 p-4 text-white">
+        <span>Alumno: Lautaro Fernandez Szutner | Materia: Aplicaciones Híbridas</span>
+    </footer>
+</body>
+
+</html>

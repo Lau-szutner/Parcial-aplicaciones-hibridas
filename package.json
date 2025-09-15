@@ -1,0 +1,20 @@
+{
+  "name": "app-hibridas-parcial-2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "install": "npm run install-client && npm run install-api",
+    "install-client": "cd client && npm install",
+    "install-api": "cd backend && npm install",
+    "start": "npm run start-client & npm run start-api",
+    "start-client": "cd client && npm run dev",
+    "start-api": "cd backend && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.5.0"
+  }
+}
