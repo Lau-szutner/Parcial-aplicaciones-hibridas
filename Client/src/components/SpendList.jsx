@@ -1,123 +1,57 @@
 // components/SpendList.jsx
 import React, { useEffect, useState } from 'react';
 import Spend from './Spend.jsx'; // Asegúrate de que el path sea correcto
-
+import { getTokenFromCookies } from '../lib/utils.js';
+import { fetchSpends, DeleteSpend, editSpend } from '../lib/utils.js';
 const SpendList = () => {
   const [spends, setSpends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Función para obtener el token de las cookies
-  const getTokenFromCookies = () => {
-    const token = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('token='));
-    return token ? token.split('=')[1] : null;
-  };
-
-  // Función para obtener los gastos
-  const fetchSpends = async () => {
-    const token = getTokenFromCookies();
-
-    if (!token) {
-      setError('Token no encontrado en las cookies');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3000/spend/', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al obtener los gastos');
-      }
-
-      const data = await response.json();
-
-      // Filtrar los gastos que NO tienen un sharedEmail (gastos normales)
-      const normalSpends = data.filter((spend) => !spend.sharedEmail);
-      setSpends(normalSpends);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchSpends(); // Llamar a la API al cargar el componente
+    const loadSpends = async () => {
+      setLoading(true);
+      const { data, error } = await fetchSpends();
+      if (error) setError(error);
+      if (data) setSpends(data);
+      setLoading(false);
+    };
+
+    loadSpends();
   }, []);
 
-  // Manejo de eliminación de un gasto
-  const handleDelete = async (id) => {
-    const token = getTokenFromCookies();
+  async function handleDelete(id) {
+    const { success, message, error } = await DeleteSpend(id);
 
-    if (!token) {
-      setError('Token no encontrado en las cookies');
-      return;
+    if (success) {
+      console.log(message);
+      // Actualizar estado de spends si querés reflejar el cambio en la UI
+      setSpends((prev) => prev.filter((s) => s._id !== id));
+    } else {
+      console.error(error);
+      setError(error);
     }
+  }
 
-    try {
-      const response = await fetch(`http://localhost:3000/spend/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
-        },
-      });
+  async function handleEditSpend(id, updatedSpendData) {
+    const { success, message, updatedSpend } = await editSpend(
+      id,
+      updatedSpendData
+    );
 
-      if (!response.ok) {
-        throw new Error('Error al eliminar el gasto');
-      }
-
-      // Si la eliminación es exitosa, actualizar el estado para quitar el gasto de la lista
-      setSpends(spends.filter((spend) => spend._id !== id));
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  // Manejo de edición de un gasto
-  const handleEdit = async (id, updatedSpend) => {
-    const token = getTokenFromCookies();
-
-    if (!token) {
-      setError('Token no encontrado en las cookies');
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:3000/spend/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
-        },
-        body: JSON.stringify(updatedSpend), // Envía los datos actualizados
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al editar el gasto');
-      }
-
-      const updatedSpendData = await response.json();
-
-      // Actualizar el estado con el gasto editado
+    if (success) {
       setSpends(
         spends.map((spend) =>
           spend._id === id ? { ...spend, ...updatedSpendData } : spend
         )
       );
-    } catch (error) {
-      setError(error.message);
+      console.log(message);
+    } else {
+      console.log(message);
     }
-  };
+
+    console.log(updatedSpendData);
+  }
 
   if (loading) return <p>Cargando gastos...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -141,7 +75,7 @@ const SpendList = () => {
             hour12: false,
           })}
           onDelete={() => handleDelete(spend._id)}
-          onEdit={(updatedSpend) => handleEdit(spend._id, updatedSpend)} // Envía los datos editados
+          onEdit={(updatedSpend) => handleEditSpend(spend._id, updatedSpend)} // Envía los datos editados
         />
       ))}
     </div>
