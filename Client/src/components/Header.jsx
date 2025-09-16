@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="w-full bg-yellow-700 p-4 flex items-center justify-between sticky top-0 z-50 shadow-lg">
+    <nav className="w-full bg-stone-500 p-4 flex items-center justify-between sticky top-0 z-50 shadow-lg">
       <div className="flex items-center space-x-4">
         {/* Logo */}
         <img

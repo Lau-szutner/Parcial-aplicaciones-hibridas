@@ -1,8 +1,8 @@
 // components/SpendList.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Spend from './Spend.jsx'; // Asegúrate de que el path sea correcto
-import { getTokenFromCookies } from '../lib/utils.js';
 import { fetchSpends, DeleteSpend, editSpend } from '../lib/utils.js';
+
 const SpendList = () => {
   const [spends, setSpends] = useState([]);
   const [loading, setLoading] = useState(true);

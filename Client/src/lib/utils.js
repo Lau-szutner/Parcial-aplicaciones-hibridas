@@ -98,4 +98,5 @@ const editSpend = async (id, updatedSpend) => {
     };
   }
 };
+
 export { getTokenFromCookies, fetchSpends, DeleteSpend, editSpend };

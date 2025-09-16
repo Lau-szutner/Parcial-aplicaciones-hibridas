@@ -76,7 +76,7 @@ const SpendForm = ({ email, onSubmit }) => {
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="bg-white p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6 text-black"
+      className="bg-white p-6 rounded-lg shadow-lg max-w-xl mx-auto text-black"
     >
       <h2 className="text-2xl font-semibold">Gastos</h2>
 
