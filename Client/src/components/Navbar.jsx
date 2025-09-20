@@ -2,7 +2,7 @@ import axios from 'axios';
 import perfil from '../assets/perfil.jpg';
 import React from 'react';
 
-const Header = () => {
+const Navbar = () => {
   // Método para manejar el logout
   const handleLogOut = async () => {
     try {
@@ -77,4 +77,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navbar;

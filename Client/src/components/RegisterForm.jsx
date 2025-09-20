@@ -13,7 +13,7 @@ const registerValidationSchema = yup.object({
     .required('El correo electrónico es obligatorio'),
   password: yup
     .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .min(4, 'La contraseña debe tener al menos 4 caracteres')
     .required('La contraseña es obligatoria'),
   confirmPassword: yup
     .string()
@@ -28,11 +28,11 @@ const loginValidationSchema = yup.object({
     .required('El correo electrónico es obligatorio'),
   password: yup
     .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .min(4, 'La contraseña debe tener al menos 4 caracteres')
     .required('La contraseña es obligatoria'),
 });
 
-const RegisterForm = () => {
+const RegisterForm = ({ setEmail, setToken }) => {
   const [isLogin, setIsLogin] = useState(true); // Estado para determinar si es login o registro
   const {
     register,
@@ -59,6 +59,9 @@ const RegisterForm = () => {
       Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
       Cookies.set('email', data.email, { expires: 7 }); // Guardamos el email en cookies
       console.log('Registro exitoso, token y email almacenados en cookies');
+
+      setEmail(data.email);
+      setToken(response.data.token); // 👈 ahora sí
     } catch (error) {
       console.error('Error en el registro:', error);
       setError('email', {
@@ -77,6 +80,8 @@ const RegisterForm = () => {
       Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
       Cookies.set('email', data.email, { expires: 7 }); // Guardamos el email en cookies
       console.log('Login exitoso, token y email almacenados en cookies');
+      setEmail(data.email);
+      setToken(response.data.token); // 👈 ahora sí
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       setError('email', {

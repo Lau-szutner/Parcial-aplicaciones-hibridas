@@ -1,5 +1,5 @@
 import './App.css';
-import Header from './components/Header.jsx';
+import Navbar from './components/Navbar.jsx';
 import Home from './views/Home.jsx';
 import SharedSpends from './views/SharedSpends.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
@@ -38,7 +38,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col bg-stone-800">
-      <Header />
+      <Navbar />
 
       {/* Mostrar el formulario de registro si no hay token */}
       {!token ? (
@@ -46,7 +46,7 @@ function App() {
           <h2 className="text-xl font-semibold mb-4 text-center text-white">
             Regístrate para continuar
           </h2>
-          <RegisterForm setToken={setToken} setEmail={setEmail} />
+          <RegisterForm setEmail={setEmail} setToken={setToken} />
         </section>
       ) : (
         <>
