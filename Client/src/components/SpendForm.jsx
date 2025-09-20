@@ -192,9 +192,9 @@ const SpendForm = ({ email, onSubmit }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full py-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
-        Enviar
+        Cargar
       </button>
     </form>
   );

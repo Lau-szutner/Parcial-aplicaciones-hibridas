@@ -188,7 +188,7 @@ const RegisterForm = ({ setEmail, setToken }) => {
         <button
           type="button"
           onClick={toggleForm}
-          className="text-indigo-600 ml-1"
+          className="text-green-500 ml-1 font-bold"
         >
           {isLogin ? 'Regístrate' : 'Inicia sesión'}
         </button>

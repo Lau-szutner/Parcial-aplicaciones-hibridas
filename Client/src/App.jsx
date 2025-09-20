@@ -54,7 +54,7 @@ function App() {
 
           <div className="grid grid-cols-[0.33fr_1fr] h-full">
             {!isSpecialPage && email && (
-              <sidebar className="text-white bg-stone-900 p-20">
+              <aside className="text-white bg-stone-900 p-20">
                 <h1 className="text-3xl font-bold text-center">
                   Bienvenido a mi App
                 </h1>
@@ -67,7 +67,7 @@ function App() {
                 >
                   Logout
                 </button>
-              </sidebar>
+              </aside>
             )}
             <Routes>
               <Route path="/" element={<Home email={email} />} />
