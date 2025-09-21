@@ -6,9 +6,10 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 // Registrar los componentes que necesitas
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = () => {
+const PieChart = ({ categories }) => {
+  console.log(categories);
   const data = {
-    labels: ['Rojo', 'Azul', 'Amarillo'],
+    labels: categories,
     datasets: [
       {
         label: 'Cantidad',

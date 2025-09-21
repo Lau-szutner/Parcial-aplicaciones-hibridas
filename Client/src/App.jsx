@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NotFound from './views/NotFound';
-import UnderConstruction from './views/underConstruction.jsx';
+import Graficos from './views/Graficos.jsx';
 
 function App() {
   const [token, setToken] = useState(null);
@@ -33,8 +33,7 @@ function App() {
   };
 
   // Verificar si la ruta actual es una página especial (en construcción o no encontrada)
-  const isSpecialPage =
-    location.pathname === '/graficos' || location.pathname === '/404';
+  const isSpecialPage = location.pathname === '/404';
 
   return (
     <div className="h-screen flex flex-col bg-stone-800">
@@ -71,7 +70,7 @@ function App() {
             )}
             <Routes>
               <Route path="/" element={<Home email={email} />} />
-              <Route path="/graficos" element={<UnderConstruction />} />
+              <Route path="/graficos" element={<Graficos />} />
               <Route path="/GastosCompartidos" element={<SharedSpends />} />
               {/* Ruta de 404 para rutas no encontradas */}
               <Route path="*" element={<NotFound />} />
