@@ -30,15 +30,19 @@ function Graficos() {
       if (!response.ok) throw new Error('Error al obtener los gastos');
 
       const data = await response.json();
-      const normalSpends = data.filter((spend) => !spend.sharedEmail);
-      console.log(data);
 
-      data.map((spend) => {
-        setTotalByCategory((prev) => ({ ...prev, spend }));
-      });
+      // Calculamos totales por categoría
+      const totals = data.reduce((acc, spend) => {
+        acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
+        return acc;
+      }, {});
 
-      console.log(totalByCategory);
-      setSpends(normalSpends);
+      setTotalByCategory(totals);
+      console.log('Totales por categoría:', totals);
+
+      // Para llenar categories
+      const uniqueCategories = [...new Set(data.map((s) => s.category))];
+      setCategories(uniqueCategories);
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +64,7 @@ function Graficos() {
 
   return (
     <div className="flex flex-col items-center justify-center text-white min-h-screen bg-stone-950">
-      <PieChart categories={categories} />
+      <PieChart spendsData={totalByCategory} />
     </div>
   );
 }
