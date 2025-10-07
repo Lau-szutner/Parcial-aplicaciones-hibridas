@@ -1,9 +1,8 @@
 import PieChart from '../components/charts/PieChart';
-import { useEffect, useState } from 'react';
-import { getTokenFromCookies } from '../lib/utils';
+import { useState } from 'react';
 
-function Graficos() {
-  const [spends, setSpends] = useState([]);
+function Graficos({ token }) {
+  let url = 'http://localhost:3000/spend/';
   const [categories, setCategories] = useState([]);
   const [totalByCategory, setTotalByCategory] = useState({
     comida: 0,
@@ -12,13 +11,20 @@ function Graficos() {
     transporte: 0,
     salud: 0,
   });
-
-  const fetchSpends = async () => {
-    const token = getTokenFromCookies();
+  const [selectedMonth, setSelectedMonth] = useState('');
+  function validateUser(user) {
     if (!token) return console.log('Token no encontrado en las cookies');
+  }
+
+  const getSpendsByMonth = async (year, month) => {
+    validateUser();
+
+    if (year && month) {
+      url += `getSpendsByMonth?year=${year}&month=${month}`;
+    }
 
     try {
-      const response = await fetch('http://localhost:3000/spend/', {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -26,46 +32,49 @@ function Graficos() {
         },
       });
 
-      if (!response.ok) throw new Error('Error al obtener los gastos');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
 
-      const data = await response.json();
+      const spendsByMonthData = await response.json();
 
-      // Calculamos totales por categoría
-      const totals = data.reduce((acc, spend) => {
+      // Calcular totales por categoría
+      const totals = spendsByMonthData.reduce((acc, spend) => {
         acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
         return acc;
       }, {});
 
       setTotalByCategory(totals);
-      // console.log('Totales por categoría:', totals);
 
-      // Para llenar categories
-      const uniqueCategories = [...new Set(data.map((s) => s.category))];
+      // Categorías únicas
+      const uniqueCategories = [
+        ...new Set(spendsByMonthData.map((s) => s.category)),
+      ];
       setCategories(uniqueCategories);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    fetchSpends();
-  }, []);
-
-  useEffect(() => {
-    const uniqueCategories = [];
-    spends.forEach((spend) => {
-      if (!uniqueCategories.includes(spend.category)) {
-        uniqueCategories.push(spend.category);
-      }
-    });
-    setCategories(uniqueCategories);
-  }, [spends]);
+  const handleMonthChange = (e) => {
+    const [year, month] = e.target.value.split('-');
+    setSelectedMonth(e.target.value);
+    getSpendsByMonth(year, month);
+  };
 
   return (
-    <div className="grid p-10">
-      <div className="">
-        <button className="text-white px-10 py-5 ">Elegir fecha</button>
+    <div className="grid p-10 gap-5">
+      <div>
+        <label className="text-white mr-4">Elegir mes y año:</label>
+        <input
+          type="month"
+          value={selectedMonth}
+          onChange={handleMonthChange}
+          className="bg-neutral-700 text-white px-4 py-2 rounded-lg cursor-pointer"
+        />
       </div>
+
       <PieChart spendsData={totalByCategory} />
     </div>
   );

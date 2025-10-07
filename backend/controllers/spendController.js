@@ -20,6 +20,41 @@ export const getSpend = async (req, res) => {
   }
 };
 
+export const getSpendsByMonth = async (req, res) => {
+  try {
+    const { email } = req.user;
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      return res.status(400).json({
+        message: 'Debes especificar el año y el mes (ej: ?year=2025&month=9).',
+      });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
+
+    const spends = await Spend.find({
+      email: email,
+      createdAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    }).sort({ createdAt: 1 });
+
+    if (!spends.length) {
+      return res
+        .status(404)
+        .json({ message: 'No se encontraron gastos para ese mes.' });
+    }
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener los gastos por mes:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
 // Crear un gasto
 export const createSpend = async (req, res) => {
   const { title, amount, description, category, email, sharedEmail } = req.body; // Incluir sharedEmail

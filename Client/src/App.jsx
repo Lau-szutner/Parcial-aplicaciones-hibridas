@@ -12,7 +12,7 @@ import Graficos from './views/Graficos.jsx';
 function App() {
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(null);
-  const location = useLocation(); // Obtén la ubicación actual
+  const location = useLocation();
 
   // Consumir las cookies al cargar el componente
   useEffect(() => {
@@ -70,7 +70,7 @@ function App() {
             )}
             <Routes>
               <Route path="/" element={<Home email={email} />} />
-              <Route path="/graficos" element={<Graficos />} />
+              <Route path="/graficos" element={<Graficos token={token} />} />
               <Route path="/GastosCompartidos" element={<SharedSpends />} />
               {/* Ruta de 404 para rutas no encontradas */}
               <Route path="*" element={<NotFound />} />

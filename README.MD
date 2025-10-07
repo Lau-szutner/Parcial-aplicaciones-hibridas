@@ -76,3 +76,9 @@ Conexión con MongoDB exitosa
 
 - El token de autenticación se guarda en las cookies para mantener la sesión del usuario entre solicitudes.
 - Para verificar que el token se maneja correctamente, asegúrate de que las cookies estén configuradas para que sean seguras y tengan una política de SameSite apropiada.
+
+### No olvidar iniciar mongoDb
+
+MacOS: brew services start mongodb-community@7.0
+
+brew services stop mongodb-community@7.0
