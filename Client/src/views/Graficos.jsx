@@ -8,7 +8,6 @@ function Graficos() {
   const [totalByCategory, setTotalByCategory] = useState({
     comida: 0,
     servicios: 0,
-    comida: 0,
     gastosVarios: 0,
     transporte: 0,
     salud: 0,
@@ -38,7 +37,7 @@ function Graficos() {
       }, {});
 
       setTotalByCategory(totals);
-      console.log('Totales por categoría:', totals);
+      // console.log('Totales por categoría:', totals);
 
       // Para llenar categories
       const uniqueCategories = [...new Set(data.map((s) => s.category))];
@@ -63,7 +62,10 @@ function Graficos() {
   }, [spends]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-white min-h-screen bg-stone-950">
+    <div className="grid p-10">
+      <div className="">
+        <button className="text-white px-10 py-5 ">Elegir fecha</button>
+      </div>
       <PieChart spendsData={totalByCategory} />
     </div>
   );

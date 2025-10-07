@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col bg-stone-800">
-      <Navbar />
+      <Navbar userEmail={email} />
 
       {/* Mostrar el formulario de registro si no hay token */}
       {!token ? (
@@ -55,7 +55,7 @@ function App() {
             {!isSpecialPage && email && (
               <aside className="text-white bg-stone-900 p-20">
                 <h1 className="text-3xl font-bold text-center">
-                  Bienvenido a mi App
+                  Bienvenido a Spend Tacker
                 </h1>
                 <p className="mt-4 text-center">
                   Bienvenido/a, <span className="font-bold">{email}</span>
