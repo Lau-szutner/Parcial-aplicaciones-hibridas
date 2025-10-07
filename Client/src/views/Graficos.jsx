@@ -1,70 +1,31 @@
 import PieChart from '../components/charts/PieChart';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSpendsByMonth } from '../lib/utils';
 
-function Graficos({ token }) {
-  let url = 'http://localhost:3000/spend/';
-  const [categories, setCategories] = useState([]);
-  const [totalByCategory, setTotalByCategory] = useState({
-    comida: 0,
-    servicios: 0,
-    gastosVarios: 0,
-    transporte: 0,
-    salud: 0,
-  });
+function Graficos() {
   const [selectedMonth, setSelectedMonth] = useState('');
-  function validateUser(user) {
-    if (!token) return console.log('Token no encontrado en las cookies');
-  }
+  const [totalByCategory, setTotalByCategory] = useState({});
 
-  const getSpendsByMonth = async (year, month) => {
-    validateUser();
-
-    if (year && month) {
-      url += `getSpendsByMonth?year=${year}&month=${month}`;
-    }
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
-      }
-
-      const spendsByMonthData = await response.json();
-
-      // Calcular totales por categoría
-      const totals = spendsByMonthData.reduce((acc, spend) => {
-        acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
-        return acc;
-      }, {});
-
-      setTotalByCategory(totals);
-
-      // Categorías únicas
-      const uniqueCategories = [
-        ...new Set(spendsByMonthData.map((s) => s.category)),
-      ];
-      setCategories(uniqueCategories);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleMonthChange = (e) => {
+  const handleMonthChange = async (e) => {
     const [year, month] = e.target.value.split('-');
     setSelectedMonth(e.target.value);
-    getSpendsByMonth(year, month);
+
+    try {
+      const totals = await getSpendsByMonth(year, month); // usamos la función importada
+      if (totals) {
+        setTotalByCategory(totals);
+      } else {
+        error = 'bg-red-500';
+
+        setTotalByCategory({});
+      }
+    } catch (error) {
+      console.error('Error al obtener los gastos:', error);
+    }
   };
 
   return (
-    <div className="grid p-10 gap-5">
+    <div className="h-full  grid p-10 gap-5">
       <div>
         <label className="text-white mr-4">Elegir mes y año:</label>
         <input
@@ -75,7 +36,7 @@ function Graficos({ token }) {
         />
       </div>
 
-      <PieChart spendsData={totalByCategory} />
+      <PieChart spendsData={totalByCategory || {}} />
     </div>
   );
 }

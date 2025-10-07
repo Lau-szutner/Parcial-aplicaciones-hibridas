@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SpendForm from '../components/SpendForm.jsx';
-import RegisterForm from '../components/RegisterForm.jsx';
-import SpendList from '../components/SpendList.jsx';
+import Spends from '../components/Spends.jsx';
 
 const Home = ({ email }) => {
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [newSpendForm, setNewSpendForm] = useState(false);
 
   const toggleFormVisibility = () => {
-    setIsFormVisible((prev) => !prev);
+    setNewSpendForm((prev) => !prev);
   };
+
   const handleFormSubmit = (data) => {
     console.log('Datos enviados:', data);
   };
+
   return (
-    <main>
-      {/* Botón para abrir/cerrar el formulario de gasto */}
-      <div className="flex">
+    <main className="">
+      <div className="flex flex-col">
         <button
           onClick={toggleFormVisibility}
-          className="m-6 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-500 transition-colors w-fit h-fit"
+          className="m-6 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-500 transition-colors w-fit h-fit cursor-pointer"
         >
-          {isFormVisible ? 'Cerrar Formulario' : 'Nuevo Gasto'}
+          {newSpendForm ? 'Cerrar Formulario' : 'Nuevo Gasto'}
         </button>
 
-        {/* Mostrar formulario de gasto si está visible */}
-        {!isFormVisible ? (
+        {newSpendForm ? (
           <section className="mt-5">
             <h2 className="text-xl font-semibold mb-4 text-center text-white">
               Agregar nuevo gasto
@@ -32,7 +31,7 @@ const Home = ({ email }) => {
             <SpendForm email={email} onSubmit={handleFormSubmit} />
           </section>
         ) : (
-          <SpendList />
+          <Spends />
         )}
       </div>
     </main>

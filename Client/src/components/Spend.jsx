@@ -87,13 +87,13 @@ const Spend = ({
           <div className="flex">
             <button
               onClick={onDelete}
-              className="mt-6 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition-colors duration-200 w-full"
+              className="mt-6 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition-colors duration-200 w-full cursor-pointer"
             >
               Eliminar
             </button>
             <button
               onClick={() => setIsEditing(true)}
-              className="mt-6 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 ml-2 w-full"
+              className="mt-6 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 ml-2 w-full cursor-pointer"
             >
               Editar
             </button>

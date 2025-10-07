@@ -99,4 +99,45 @@ const editSpend = async (id, updatedSpend) => {
   }
 };
 
-export { getTokenFromCookies, fetchSpends, DeleteSpend, editSpend };
+const getSpendsByMonth = async (year, month) => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/spend/getSpendsByMonth?year=${year}&month=${month}`,
+
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message);
+    }
+
+    const spendsByMonthData = await response.json();
+
+    // Calcular totales por categoría
+    const totals = spendsByMonthData.reduce((acc, spend) => {
+      acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
+      return acc;
+    }, {});
+
+    return totals;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  getTokenFromCookies,
+  fetchSpends,
+  DeleteSpend,
+  editSpend,
+  getSpendsByMonth,
+};

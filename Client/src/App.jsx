@@ -3,11 +3,11 @@ import Navbar from './components/Navbar.jsx';
 import Home from './views/Home.jsx';
 import SharedSpends from './views/SharedSpends.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
-import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { Routes, Route, useLocation } from 'react-router-dom';
 import NotFound from './views/NotFound';
 import Graficos from './views/Graficos.jsx';
+import { useState, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 function App() {
   const [token, setToken] = useState(null);
@@ -36,7 +36,7 @@ function App() {
   const isSpecialPage = location.pathname === '/404';
 
   return (
-    <div className="h-screen flex flex-col bg-stone-800">
+    <div className="flex flex-col bg-stone-800 h-full">
       <Navbar userEmail={email} />
 
       {/* Mostrar el formulario de registro si no hay token */}
@@ -53,7 +53,7 @@ function App() {
 
           <div className="grid grid-cols-[0.33fr_1fr] h-full">
             {!isSpecialPage && email && (
-              <aside className="text-white bg-stone-900 p-20">
+              <aside className="text-white bg-stone-900 p-20 h-full">
                 <h1 className="text-3xl font-bold text-center">
                   Bienvenido a Spend Tacker
                 </h1>
@@ -70,7 +70,7 @@ function App() {
             )}
             <Routes>
               <Route path="/" element={<Home email={email} />} />
-              <Route path="/graficos" element={<Graficos token={token} />} />
+              <Route path="/graficos" element={<Graficos />} />
               <Route path="/GastosCompartidos" element={<SharedSpends />} />
               {/* Ruta de 404 para rutas no encontradas */}
               <Route path="*" element={<NotFound />} />

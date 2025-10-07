@@ -1,9 +1,9 @@
-// components/SpendList.jsx
+// components/Spends.jsx
+import Spend from './Spend.jsx';
 import { useEffect, useState } from 'react';
-import Spend from './Spend.jsx'; // Asegúrate de que el path sea correcto
 import { fetchSpends, DeleteSpend, editSpend } from '../lib/utils.js';
 
-const SpendList = () => {
+const Spends = () => {
   const [spends, setSpends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -82,4 +82,4 @@ const SpendList = () => {
   );
 };
 
-export default SpendList;
+export default Spends;
