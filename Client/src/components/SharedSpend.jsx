@@ -7,7 +7,7 @@ const SharedSpend = ({
   email,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 w-full max-w-sm">
+    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 max-w-sm h-fit">
       <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
       <h3 className="text-sm text-gray-500">{createdAt}</h3>
       <p className="text-gray-600 mt-2">{description}</p>
