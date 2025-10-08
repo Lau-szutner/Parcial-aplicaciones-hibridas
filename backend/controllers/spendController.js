@@ -58,7 +58,7 @@ export const getSpendsByMonth = async (req, res) => {
 export const getSharedSpends = async (req, res) => {
   try {
     const { email } = req.user;
-    const { sharedWith } = req.body;
+    const { sharedWith } = req.query;
 
     const spends = await Spend.find({
       email,

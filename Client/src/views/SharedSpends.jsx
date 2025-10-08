@@ -1,6 +1,7 @@
 // components/SharedSpends.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SharedSpend from '../components/SharedSpend.jsx'; // Asegúrate de que el path sea correcto
+import { getTokenFromCookies } from '../lib/utils.js';
 
 const SharedSpends = () => {
   const [sharedSpends, setSharedSpends] = useState([]);
@@ -8,6 +9,7 @@ const SharedSpends = () => {
   const [error, setError] = useState(null);
 
   // Función para obtener los gastos compartidos
+  // Pero debo llevar esta funcion a utils
   const fetchSharedSpends = async () => {
     const token = getTokenFromCookies();
 
@@ -18,13 +20,16 @@ const SharedSpends = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/spend/', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/spend/getSharedSpends?sharedWith=lautaroszutner123123@gmail.com`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Error al obtener los gastos');
@@ -32,9 +37,7 @@ const SharedSpends = () => {
 
       const data = await response.json();
 
-      // Filtrar los gastos que tienen un sharedEmail (gastos compartidos)
-      const filteredSharedSpends = data.filter((spend) => spend.sharedEmail);
-      setSharedSpends(filteredSharedSpends);
+      setSharedSpends(data);
       setLoading(false);
     } catch (error) {
       setError(error.message);
