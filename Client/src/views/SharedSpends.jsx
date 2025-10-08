@@ -7,14 +7,6 @@ const SharedSpends = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Función para obtener el token de las cookies
-  const getTokenFromCookies = () => {
-    const token = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('token='));
-    return token ? token.split('=')[1] : null;
-  };
-
   // Función para obtener los gastos compartidos
   const fetchSharedSpends = async () => {
     const token = getTokenFromCookies();

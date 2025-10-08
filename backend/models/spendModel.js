@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { type } from 'os';
 
 // Definir el esquema
 const spendSchema = new mongoose.Schema({
@@ -32,7 +33,7 @@ const spendSchema = new mongoose.Schema({
     trim: true,
     match: [/\S+@\S+\.\S+/, 'Por favor ingrese un correo electrónico válido'],
   },
-  sharedEmail: {
+  sharedWith: {
     type: String,
     trim: true,
     lowercase: true,

@@ -48,10 +48,12 @@ const SpendForm = ({ email, onSubmit }) => {
       ...data,
       email, // Agregar email principal del usuario
       category: categoria,
-      sharedEmail: data.sharedEmail || null, // Asegurar que sea null si no se ingresa
+      sharedWith: data.sharedWith || null, // Asegurar que sea null si no se ingresa
     };
 
     try {
+      console.log(formData);
+
       // Realizar la solicitud POST al backend para crear un gasto
       const response = await axios.post(
         'http://localhost:3000/spend',
@@ -167,21 +169,21 @@ const SpendForm = ({ email, onSubmit }) => {
       {/* Usuario compartido */}
       <div className="space-y-2">
         <label
-          htmlFor="sharedEmail"
+          htmlFor="sharedWith"
           className="block text-sm font-medium text-gray-700"
         >
           Correo del usuario compartido (opcional)
         </label>
         <input
-          id="sharedEmail"
+          id="sharedWith"
           type="email"
-          {...register('sharedEmail')}
+          {...register('sharedWith')}
           className={`w-full p-3 border ${
-            errors.sharedEmail ? 'border-red-500' : 'border-gray-300'
+            errors.sharedWith ? 'border-red-500' : 'border-gray-300'
           } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
         />
-        {errors.sharedEmail && (
-          <p className="text-sm text-red-500">{errors.sharedEmail.message}</p>
+        {errors.sharedWith && (
+          <p className="text-sm text-red-500">{errors.sharedWith.message}</p>
         )}
       </div>
 

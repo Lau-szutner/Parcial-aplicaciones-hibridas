@@ -55,9 +55,29 @@ export const getSpendsByMonth = async (req, res) => {
   }
 };
 
+export const getSharedSpends = async (req, res) => {
+  try {
+    const { email: email } = req.user;
+    const { sharedWith } = req.body;
+
+    const spends = await Spend.find({ email: email, sharedWith: sharedWith });
+
+    if (!spends.length) {
+      return res
+        .status(404)
+        .json({ message: 'No se encontraron gastos compartidos' });
+    }
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener los gastos por mes:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
 // Crear un gasto
 export const createSpend = async (req, res) => {
-  const { title, amount, description, category, email, sharedEmail } = req.body; // Incluir sharedEmail
+  const { title, amount, description, category, email, sharedWith } = req.body; // Incluir sharedWith
   const userId = req.user._id; // Obtener el userId del usuario autenticado
   console.log(req.user);
   try {
@@ -76,7 +96,7 @@ export const createSpend = async (req, res) => {
       description, // Descripción del gasto
       category, // Categoría seleccionada
       email, // Email del usuario autenticado
-      sharedEmail: sharedEmail || null, // Guardar null si no se ingresa
+      sharedWith: sharedWith || null, // Guardar null si no se ingresa
       createdAt: new Date(), // Fecha de creación
     });
 
@@ -108,7 +128,7 @@ export const deleteSpend = async (req, res) => {
 // Editar un gasto
 export const editSpend = async (req, res) => {
   const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
-  const { title, amount, description, category, sharedEmail } = req.body; // Datos a actualizar
+  const { title, amount, description, category, sharedWith } = req.body; // Datos a actualizar
 
   try {
     // Buscar y actualizar el gasto con los datos proporcionados
@@ -119,7 +139,7 @@ export const editSpend = async (req, res) => {
         amount, // Monto del gasto
         description, // Descripción del gasto
         category, // Categoría seleccionada
-        sharedEmail: sharedEmail || null, // Email compartido (si aplica)
+        sharedWith: sharedWith || null, // Email compartido (si aplica)
       },
       { new: true } // Retornar el documento actualizado
     );

@@ -7,6 +7,7 @@ import {
   deleteSpend,
   editSpend,
   getSpendsByMonth,
+  getSharedSpends,
 } from '../controllers/spendController.js'; // Controladores de gastos
 
 const router = express.Router();
@@ -16,10 +17,14 @@ router.get('/', protect, getSpend); // protect asegura que el usuario esté aute
 
 router.get('/getSpendsByMonth', protect, getSpendsByMonth);
 // Ruta para crear un nuevo gasto, solo accesible para usuarios autenticados
+
+router.get('/getSharedSpends', protect, getSharedSpends);
+
 router.post('/', protect, createSpend); // protect asegura que el usuario esté autenticado
 
 // routes/spendRoutes.js
 router.delete('/:id', protect, deleteSpend); // Ruta para eliminar el gasto por ID
 
 router.put('/:id', protect, editSpend);
+
 export default router;
