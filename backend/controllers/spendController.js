@@ -57,10 +57,13 @@ export const getSpendsByMonth = async (req, res) => {
 
 export const getSharedSpends = async (req, res) => {
   try {
-    const { email: email } = req.user;
+    const { email } = req.user;
     const { sharedWith } = req.body;
 
-    const spends = await Spend.find({ email: email, sharedWith: sharedWith });
+    const spends = await Spend.find({
+      email,
+      sharedWith,
+    });
 
     if (!spends.length) {
       return res
@@ -70,7 +73,7 @@ export const getSharedSpends = async (req, res) => {
 
     res.status(200).json(spends);
   } catch (error) {
-    console.error('Error al obtener los gastos por mes:', error);
+    console.error('Error al obtener los gastos compartidos:', error);
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
