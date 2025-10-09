@@ -99,9 +99,9 @@ const RegisterForm = ({ setEmail, setToken }) => {
   return (
     <form
       onSubmit={handleSubmit(isLogin ? handleLogin : handleRegister)}
-      className="bg-stone-700 p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6 text-black"
+      className="bg-stone-700 p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6  text-white"
     >
-      <h2 className="text-2xl font-semibold text-white">
+      <h2 className="text-2xl font-semibold">
         {isLogin ? 'Iniciar Sesión' : 'Registro de Usuario'}
       </h2>
 

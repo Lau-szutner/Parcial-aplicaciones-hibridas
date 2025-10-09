@@ -1,52 +1,30 @@
-// components/SharedSpends.jsx
 import { useEffect, useState } from 'react';
-import SharedSpend from '../components/SharedSpend.jsx'; // Asegúrate de que el path sea correcto
-import { getTokenFromCookies } from '../lib/utils.js';
+import SharedSpend from '../components/SharedSpend.jsx';
+import { fetchSharedSpends } from '../lib/utils.js';
 
 const SharedSpends = () => {
   const [sharedSpends, setSharedSpends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Función para obtener los gastos compartidos
-  // Pero debo llevar esta funcion a utils
-  const fetchSharedSpends = async () => {
-    const token = getTokenFromCookies();
-
-    if (!token) {
-      setError('Token no encontrado en las cookies');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/spend/getSharedSpends?sharedWith=lautaroszutner123123@gmail.com`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Error al obtener los gastos');
-      }
-
-      const data = await response.json();
-
-      setSharedSpends(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchSharedSpends(); // Llamar a la API al cargar el componente
+    const obtenerGastos = async () => {
+      try {
+        const data = await fetchSharedSpends();
+
+        if (!data) {
+          setError('No se encontraron gastos compartidos');
+        } else {
+          setSharedSpends(data);
+        }
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    obtenerGastos();
   }, []);
 
   if (loading) return <p>Cargando gastos compartidos...</p>;
@@ -61,7 +39,7 @@ const SharedSpends = () => {
           description={spend.description}
           amount={spend.amount}
           categoria={spend.category}
-          email={spend.sharedEmail} // Pasar el email compartido al componente SharedSpend
+          email={spend.sharedEmail}
           createdAt={new Date(spend.createdAt).toLocaleString('es-ES', {
             weekday: 'long',
             year: 'numeric',
@@ -70,7 +48,7 @@ const SharedSpends = () => {
             hour: 'numeric',
             minute: 'numeric',
             hour12: false,
-          })} // Formateando la fecha directamente
+          })}
         />
       ))}
     </div>

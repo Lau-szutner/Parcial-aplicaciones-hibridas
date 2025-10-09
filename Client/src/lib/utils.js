@@ -6,7 +6,6 @@ const getTokenFromCookies = () => {
   return token ? token.split('=')[1] : null;
 };
 
-// obtener todos los gastos
 const fetchSpends = async () => {
   const token = getTokenFromCookies();
 
@@ -134,10 +133,44 @@ const getSpendsByMonth = async (year, month) => {
   }
 };
 
+const fetchSharedSpends = async () => {
+  const token = getTokenFromCookies();
+
+  if (!token) {
+    setError('Token no encontrado en las cookies');
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/spend/getSharedSpends`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Error al obtener los gastos');
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    setError(error.message);
+    setLoading(false);
+  }
+};
+
 export {
   getTokenFromCookies,
   fetchSpends,
   DeleteSpend,
   editSpend,
   getSpendsByMonth,
+  fetchSharedSpends,
 };
