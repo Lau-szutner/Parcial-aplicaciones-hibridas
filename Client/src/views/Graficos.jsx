@@ -1,5 +1,5 @@
 import PieChart from '../components/charts/PieChart';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getSpendsByMonth } from '../lib/utils';
 
 function Graficos() {
@@ -11,12 +11,11 @@ function Graficos() {
     setSelectedMonth(e.target.value);
 
     try {
-      const totals = await getSpendsByMonth(year, month); // usamos la función importada
+      const totals = await getSpendsByMonth(year, month);
       if (totals) {
         setTotalByCategory(totals);
       } else {
         error = 'bg-red-500';
-
         setTotalByCategory({});
       }
     } catch (error) {

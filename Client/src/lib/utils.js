@@ -3,16 +3,14 @@ const getTokenFromCookies = () => {
   const token = document.cookie
     .split('; ')
     .find((row) => row.startsWith('token='));
-  return token ? token.split('=')[1] : null;
+
+  return token
+    ? token.split('=')[1]
+    : { data: null, error: 'Token no encontrado en las cookies' };
 };
 
-const fetchSpends = async () => {
+const getAllSpends = async () => {
   const token = getTokenFromCookies();
-
-  if (!token) {
-    return { data: null, error: 'Token no encontrado en las cookies' };
-  }
-
   try {
     const response = await fetch('http://localhost:3000/spend/', {
       method: 'GET',
@@ -23,61 +21,50 @@ const fetchSpends = async () => {
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener los gastos');
+      throw new Error('Error al obtener todos los gastos');
     }
 
     const data = await response.json();
     const spends = data.filter((spend) => !spend.sharedEmail);
-
     return { data: spends, error: null };
   } catch (error) {
     return { data: null, error: error.message };
   }
 };
 
-// Manejo de eliminación de un gasto
-const DeleteSpend = async (id) => {
+const deleteSpendsById = async (id) => {
   const token = getTokenFromCookies();
-
-  if (!token) {
-    setError('Token no encontrado en las cookies');
-    return;
-  }
 
   try {
     const response = await fetch(`http://localhost:3000/spend/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
       throw new Error('Error al eliminar el gasto');
     }
+
     return { success: true, message: `Gasto eliminado ${id}` };
   } catch (error) {
     return { success: false, error: error.message };
   }
 };
 // Manejo de edición de un gasto
-const editSpend = async (id, updatedSpend) => {
+const editSpendById = async (id, updatedSpend) => {
   const token = getTokenFromCookies();
-
-  if (!token) {
-    setError('Token no encontrado en las cookies');
-    return;
-  }
 
   try {
     const response = await fetch(`http://localhost:3000/spend/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updatedSpend), // Envía los datos actualizados
+      body: JSON.stringify(updatedSpend),
     });
 
     if (!response.ok) {
@@ -93,7 +80,7 @@ const editSpend = async (id, updatedSpend) => {
     };
   } catch (error) {
     return {
-      message: `Error en la actualizacion del gasto ${id}`,
+      message: `Error al actualizar el gasto ${id}`,
     };
   }
 };
@@ -115,13 +102,13 @@ const getSpendsByMonth = async (year, month) => {
     );
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message);
+      throw new Error(
+        `No se encontraron gastos en el mes ${month} y año ${year}`
+      );
     }
 
     const spendsByMonthData = await response.json();
 
-    // Calcular totales por categoría
     const totals = spendsByMonthData.reduce((acc, spend) => {
       acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
       return acc;
@@ -133,13 +120,8 @@ const getSpendsByMonth = async (year, month) => {
   }
 };
 
-const fetchSharedSpends = async () => {
+const getSharedSpends = async () => {
   const token = getTokenFromCookies();
-
-  if (!token) {
-    setError('Token no encontrado en las cookies');
-    return;
-  }
 
   try {
     const response = await fetch(
@@ -148,29 +130,28 @@ const fetchSharedSpends = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Usa el token obtenido de las cookies
+          Authorization: `Bearer ${token}`,
         },
       }
     );
-
     if (!response.ok) {
-      throw new Error('Error al obtener los gastos');
+      throw new Error(`No se encontraron gastos para ese mes `);
     }
 
     const data = await response.json();
 
     return data;
   } catch (error) {
-    setError(error.message);
-    setLoading(false);
+    console.warn(error);
+    throw error;
   }
 };
 
 export {
   getTokenFromCookies,
-  fetchSpends,
-  DeleteSpend,
-  editSpend,
+  getAllSpends,
+  deleteSpendsById,
+  editSpendById,
   getSpendsByMonth,
-  fetchSharedSpends,
+  getSharedSpends,
 };

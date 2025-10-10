@@ -1,7 +1,7 @@
 // components/Spends.jsx
 import Spend from './Spend.jsx';
 import { useEffect, useState } from 'react';
-import { fetchSpends, DeleteSpend, editSpend } from '../lib/utils.js';
+import { getAllSpends, deleteSpendsById, editSpendById } from '../lib/utils.js';
 
 const Spends = () => {
   const [spends, setSpends] = useState([]);
@@ -11,7 +11,7 @@ const Spends = () => {
   useEffect(() => {
     const loadSpends = async () => {
       setLoading(true);
-      const { data, error } = await fetchSpends();
+      const { data, error } = await getAllSpends();
       if (error) setError(error);
       if (data) setSpends(data);
       setLoading(false);
@@ -21,11 +21,10 @@ const Spends = () => {
   }, []);
 
   async function handleDelete(id) {
-    const { success, message, error } = await DeleteSpend(id);
+    const { success, message, error } = await deleteSpendsById(id);
 
     if (success) {
       console.log(message);
-      // Actualizar estado de spends si querés reflejar el cambio en la UI
       setSpends((prev) => prev.filter((s) => s._id !== id));
     } else {
       console.error(error);
@@ -34,7 +33,7 @@ const Spends = () => {
   }
 
   async function handleEditSpend(id, updatedSpendData) {
-    const { success, message, updatedSpend } = await editSpend(
+    const { success, message, updatedSpend } = await editSpendById(
       id,
       updatedSpendData
     );

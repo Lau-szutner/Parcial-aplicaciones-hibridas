@@ -56,6 +56,7 @@ export const logoutUser = (req, res) => {
     // Limpiar el token de las cookies
     res.clearCookie('token', { path: '/' });
     res.clearCookie('email', { path: '/' });
+    res.clearCookie('selectedMonth', { path: '/' });
     // También puedes asegurarte de que no haya ningún encabezado Authorization
     res.setHeader('Authorization', '');
 

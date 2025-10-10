@@ -111,7 +111,7 @@ export const createSpend = async (req, res) => {
 };
 
 // Eliminar un gasto
-export const deleteSpend = async (req, res) => {
+export const deleteSpendsById = async (req, res) => {
   const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
 
   try {
@@ -128,7 +128,7 @@ export const deleteSpend = async (req, res) => {
   }
 };
 // Editar un gasto
-export const editSpend = async (req, res) => {
+export const editSpendById = async (req, res) => {
   const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
   const { title, amount, description, category, sharedWith } = req.body; // Datos a actualizar
 

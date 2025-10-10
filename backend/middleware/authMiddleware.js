@@ -18,9 +18,6 @@ export const protect = async (req, res, next) => {
       // Verificar la validez del token
       const decoded = jwt.verify(token, JWT_SECRET);
 
-      // Agregar el token decodificado a la solicitud para referencia
-      console.log('Token decodificado:', decoded);
-
       // Buscar al usuario usando el email del token
       req.user = await User.findOne({ email: decoded.email }).select(
         '-password'

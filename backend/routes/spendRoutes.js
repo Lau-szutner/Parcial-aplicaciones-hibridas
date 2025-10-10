@@ -4,8 +4,8 @@ import { protect } from '../middleware/authMiddleware.js'; // Middleware para pr
 import {
   getSpend,
   createSpend,
-  deleteSpend,
-  editSpend,
+  deleteSpendsById,
+  editSpendById,
   getSpendsByMonth,
   getSharedSpends,
 } from '../controllers/spendController.js'; // Controladores de gastos
@@ -23,8 +23,8 @@ router.get('/getSharedSpends', protect, getSharedSpends);
 router.post('/', protect, createSpend); // protect asegura que el usuario esté autenticado
 
 // routes/spendRoutes.js
-router.delete('/:id', protect, deleteSpend); // Ruta para eliminar el gasto por ID
+router.delete('/:id', protect, deleteSpendsById); // Ruta para eliminar el gasto por ID
 
-router.put('/:id', protect, editSpend);
+router.put('/:id', protect, editSpendById);
 
 export default router;
