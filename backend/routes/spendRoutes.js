@@ -1,29 +1,28 @@
-// routes/spendRoutes.js
 import express from 'express';
-import { protect } from '../middleware/authMiddleware.js'; // Middleware para proteger las rutas
+import { protect } from '../middleware/authMiddleware.js';
 import {
   getSpend,
   createSpend,
-  deleteSpendsById,
+  deleteSpendById,
   editSpendById,
   getSpendsByMonth,
   getSharedSpends,
-} from '../controllers/spendController.js'; // Controladores de gastos
+  getSharedSpendsWithMe,
+} from '../controllers/spendController.js';
 
 const router = express.Router();
 
-// Ruta para obtener los gastos del usuario autenticado
-router.get('/', protect, getSpend); // protect asegura que el usuario esté autenticado
+router.get('/', protect, getSpend);
 
 router.get('/getSpendsByMonth', protect, getSpendsByMonth);
-// Ruta para crear un nuevo gasto, solo accesible para usuarios autenticados
 
 router.get('/getSharedSpends', protect, getSharedSpends);
 
-router.post('/', protect, createSpend); // protect asegura que el usuario esté autenticado
+router.get('/getSharedSpendsWithMe', protect, getSharedSpendsWithMe);
 
-// routes/spendRoutes.js
-router.delete('/:id', protect, deleteSpendsById); // Ruta para eliminar el gasto por ID
+router.post('/', protect, createSpend);
+
+router.delete('/:id', protect, deleteSpendById);
 
 router.put('/:id', protect, editSpendById);
 

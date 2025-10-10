@@ -9,7 +9,7 @@ const getTokenFromCookies = () => {
     : { data: null, error: 'Token no encontrado en las cookies' };
 };
 
-const getAllSpends = async () => {
+const fetchAllSpends = async () => {
   const token = getTokenFromCookies();
   try {
     const response = await fetch('http://localhost:3000/spend/', {
@@ -20,19 +20,19 @@ const getAllSpends = async () => {
       },
     });
 
-    if (!response.ok) {
-      throw new Error('Error al obtener todos los gastos');
-    }
+    const result = await response.json();
 
-    const data = await response.json();
-    const spends = data.filter((spend) => !spend.sharedEmail);
-    return { data: spends, error: null };
+    if (!response.ok) {
+      throw new Error(result.message || 'Error al obtener los gastos');
+    }
+    // console.log(result.data);
+    return { data: result, error: null };
   } catch (error) {
     return { data: null, error: error.message };
   }
 };
 
-const deleteSpendsById = async (id) => {
+const deleteSpendById = async (id) => {
   const token = getTokenFromCookies();
 
   try {
@@ -147,11 +147,40 @@ const getSharedSpends = async () => {
   }
 };
 
+const fetchSharedSpendsWithMe = async () => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/spend/getSharedSpendsWithMe`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`No se encontraron gastos que te compartan `);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
 export {
   getTokenFromCookies,
-  getAllSpends,
-  deleteSpendsById,
+  fetchAllSpends,
+  deleteSpendById,
   editSpendById,
   getSpendsByMonth,
   getSharedSpends,
+  fetchSharedSpendsWithMe,
 };

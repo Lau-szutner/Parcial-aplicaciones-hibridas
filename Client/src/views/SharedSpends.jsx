@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import SharedSpend from '../components/SharedSpend.jsx';
-import { getSharedSpends } from '../lib/utils.js';
+import { getSharedSpends, fetchSharedSpendsWithMe } from '../lib/utils.js';
 
 const SharedSpends = () => {
   const [sharedSpends, setSharedSpends] = useState([]);
@@ -10,7 +10,7 @@ const SharedSpends = () => {
   useEffect(() => {
     const obtenerGastos = async () => {
       try {
-        const data = await getSharedSpends();
+        const data = await fetchSharedSpendsWithMe();
 
         setSharedSpends(data);
       } catch (error) {

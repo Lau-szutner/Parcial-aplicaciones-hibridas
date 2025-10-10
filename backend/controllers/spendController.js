@@ -1,21 +1,21 @@
 import Spend from '../models/spendModel.js';
 
-// Obtener los gastos del usuario autenticado
 export const getSpend = async (req, res) => {
   try {
-    const { email } = req.user; // Obtener el email del usuario autenticado
+    const { email } = req.user;
 
-    // Verificar si el email está presente
     if (!email) {
       return res.status(400).json({ message: 'Email no proporcionado' });
     }
 
-    // Filtrar los gastos por el email del usuario autenticado
     const spends = await Spend.find({ email });
 
-    res.status(200).json(spends); // Retornar los gastos encontrados
+    if (spends.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron gastos' });
+    }
+
+    res.status(200).json(spends);
   } catch (error) {
-    console.error('Error al obtener los gastos:', error);
     res.status(500).json({ message: 'Error al obtener los gastos' });
   }
 };
@@ -77,6 +77,26 @@ export const getSharedSpends = async (req, res) => {
   }
 };
 
+export const getSharedSpendsWithMe = async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    const spends = await Spend.find({
+      sharedWith: email,
+    });
+
+    if (!spends.length) {
+      return res
+        .status(404)
+        .json({ message: 'No se encontraron gastos compartidos' });
+    }
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener los gastos compartidos:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
 // Crear un gasto
 export const createSpend = async (req, res) => {
   const { title, amount, description, category, email, sharedWith } = req.body; // Incluir sharedWith
@@ -111,7 +131,7 @@ export const createSpend = async (req, res) => {
 };
 
 // Eliminar un gasto
-export const deleteSpendsById = async (req, res) => {
+export const deleteSpendById = async (req, res) => {
   const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
 
   try {

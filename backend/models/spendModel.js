@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-import { type } from 'os';
 
-// Definir el esquema
 const spendSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -46,8 +44,6 @@ const spendSchema = new mongoose.Schema({
   },
 });
 
-// Crear el modelo a partir del esquema
 const Spend = mongoose.model('Spend', spendSchema);
 
-// Exportar el modelo
 export default Spend;
