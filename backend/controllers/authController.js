@@ -1,31 +1,25 @@
 import User from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'clave_secreta';
+import {
+  ensureUserDosentExist,
+  hashPassword,
+  createUser,
+  createTokenUser,
+} from '../services/userServices.js';
 
-// Registro de usuario
 export const registerUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userExists = await User.findOne({ email });
+    await ensureUserDosentExist(email);
 
-    if (userExists) {
-      return res.status(400).json({ message: 'Usuario ya registrado' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({ email, password: hashedPassword });
-
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '24h',
-    });
+    const hashedPassword = await hashPassword(password);
+    const user = await createUser(email, hashedPassword);
+    const token = createTokenUser(user, email);
 
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: 'Error al registrar usuario' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -40,9 +34,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '24h',
-    });
+    const token = createTokenUser(user, email);
 
     res.status(200).json({ token });
   } catch (error) {
