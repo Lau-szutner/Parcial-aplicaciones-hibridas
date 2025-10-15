@@ -1,7 +1,7 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
 import {
-  getSpend,
+  getSpendsByEmail,
   createSpend,
   deleteSpendById,
   editSpendById,
@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.get('/', protect, getSpend);
+router.get('/getSpendsByEmail', protect, getSpendsByEmail);
 
 router.get('/getSpendsByMonth', protect, getSpendsByMonth);
 

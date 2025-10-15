@@ -1,21 +1,23 @@
 import Spend from '../models/spendModel.js';
+import {
+  validateEmail,
+  getAllspendsByEmail,
+} from '../services/spendServices.js';
 
-export const getSpend = async (req, res) => {
+export const getSpendsByEmail = async (req, res) => {
   try {
-    const { email } = req.user;
-
-    if (!email) {
-      return res.status(400).json({ message: 'Email no proporcionado' });
-    }
-
-    const spends = await Spend.find({ email });
-
-    if (spends.length === 0) {
-      return res.status(404).json({ message: 'No se encontraron gastos' });
-    }
+    const { email } = req.body;
+    await validateEmail(email);
+    const spends = await getAllspendsByEmail(email);
 
     res.status(200).json(spends);
   } catch (error) {
+    if (error.message.includes('email no proporcionado')) {
+      return res.status(400).json({ message: error.message });
+    }
+    if (error.message.includes('no se encontraron gastos')) {
+      return res.status(404).json({ message: error.message });
+    }
     res.status(500).json({ message: 'Error al obtener los gastos' });
   }
 };
@@ -23,6 +25,7 @@ export const getSpend = async (req, res) => {
 export const getSpendsByMonth = async (req, res) => {
   try {
     const { email } = req.user;
+    await validateEmail(email);
     const { year, month } = req.query;
 
     if (!year || !month) {

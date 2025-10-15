@@ -4,29 +4,48 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'clave_secreta';
 
-async function ensureUserDosentExist(email) {
+async function ensureUserDoesntExist(email) {
   const userExists = await User.findOne({ email });
-
   if (userExists) {
-    throw new Error('Usario ya registrado');
+    throw new Error('Usuario ya registrado');
   }
 }
 
 async function hashPassword(password) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  return hashedPassword;
+  return await bcrypt.hash(password, 10);
 }
 
 async function createUser(email, hashedPassword) {
-  const user = await User.create({ email, password: hashedPassword });
+  return await User.create({ email, password: hashedPassword });
+}
+
+async function createTokenUser(user) {
+  return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+    expiresIn: '24h',
+  });
+}
+
+async function findUser(email) {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error(`No existe un usuario con el mail ${email}`);
+  }
   return user;
 }
 
-async function createTokenUser(user, email) {
-  const token = jwt.sign({ id: user._id, email: email }, JWT_SECRET, {
-    expiresIn: '24h',
-  });
-  return token;
+async function comparePassword(password, userPassword) {
+  const isMatch = await bcrypt.compare(password, userPassword);
+  if (!isMatch) {
+    throw new Error('Credenciales incorrectas');
+  }
+  return true;
 }
 
-export { hashPassword, ensureUserDosentExist, createUser, createTokenUser };
+export {
+  ensureUserDoesntExist,
+  hashPassword,
+  createUser,
+  createTokenUser,
+  findUser,
+  comparePassword,
+};

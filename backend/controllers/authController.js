@@ -1,58 +1,60 @@
-import User from '../models/userModel.js';
-
 import {
-  ensureUserDosentExist,
+  ensureUserDoesntExist,
   hashPassword,
   createUser,
   createTokenUser,
+  findUser,
+  comparePassword,
 } from '../services/userServices.js';
 
 export const registerUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    await ensureUserDosentExist(email);
+    await ensureUserDoesntExist(email);
 
     const hashedPassword = await hashPassword(password);
     const user = await createUser(email, hashedPassword);
-    const token = createTokenUser(user, email);
+    const token = await createTokenUser(user);
 
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.message.includes('ya registrado')) {
+      return res.status(409).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: 'Error al registrar usuario' });
   }
 };
 
-// Login de usuario
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await findUser(email);
+    await comparePassword(password, user.password);
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: 'Credenciales incorrectas' });
-    }
-
-    const token = createTokenUser(user, email);
-
+    const token = await createTokenUser(user);
     res.status(200).json({ token });
   } catch (error) {
+    if (error.message.includes('Credenciales incorrectas')) {
+      return res.status(401).json({ message: error.message });
+    }
+    if (error.message.includes('No existe')) {
+      return res.status(404).json({ message: error.message });
+    }
+
     res.status(500).json({ message: 'Error al iniciar sesión' });
   }
 };
 
-// Logout de usuario
 export const logoutUser = (req, res) => {
   try {
-    // Limpiar el token de las cookies
     res.clearCookie('token', { path: '/' });
     res.clearCookie('email', { path: '/' });
     res.clearCookie('selectedMonth', { path: '/' });
-    // También puedes asegurarte de que no haya ningún encabezado Authorization
     res.setHeader('Authorization', '');
 
-    // Responder con éxito
     res.status(200).json({ message: 'Logout exitoso' });
   } catch (error) {
     console.error('Error al realizar el logout:', error);
