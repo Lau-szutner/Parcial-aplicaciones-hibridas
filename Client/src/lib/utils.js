@@ -12,13 +12,16 @@ const getTokenFromCookies = () => {
 const fetchAllSpends = async () => {
   const token = getTokenFromCookies();
   try {
-    const response = await fetch('http://localhost:3000/spend/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      'http://localhost:3000/spend/getSpendsByEmail',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const result = await response.json();
 

@@ -2,11 +2,12 @@ import Spend from '../models/spendModel.js';
 import {
   validateEmail,
   getAllspendsByEmail,
+  getSpendsByDate,
 } from '../services/spendServices.js';
 
 export const getSpendsByEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email } = req.user;
     await validateEmail(email);
     const spends = await getAllspendsByEmail(email);
 
@@ -23,37 +24,17 @@ export const getSpendsByEmail = async (req, res) => {
 };
 
 export const getSpendsByMonth = async (req, res) => {
+  const { email } = req.user;
+  const { year, month } = req.query;
   try {
-    const { email } = req.user;
     await validateEmail(email);
-    const { year, month } = req.query;
-
-    if (!year || !month) {
-      return res.status(400).json({
-        message: 'Debes especificar el año y el mes (ej: ?year=2025&month=9).',
-      });
-    }
-
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 1);
-
-    const spends = await Spend.find({
-      email: email,
-      createdAt: {
-        $gte: startDate,
-        $lt: endDate,
-      },
-    }).sort({ createdAt: 1 });
-
-    if (!spends.length) {
-      return res
-        .status(404)
-        .json({ message: 'No se encontraron gastos para ese mes.' });
-    }
+    const spends = await getSpendsByDate(email, year, month);
 
     res.status(200).json(spends);
   } catch (error) {
-    console.error('Error al obtener los gastos por mes:', error);
+    if (error.message.includes('no hay fechas')) {
+      return res.status(400).json({ message: error.message });
+    }
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };

@@ -14,7 +14,6 @@ export const protect = async (req, res, next) => {
     try {
       // Obtener el token de los encabezados
       token = req.headers.authorization.split(' ')[1];
-
       // Verificar la validez del token
       const decoded = jwt.verify(token, JWT_SECRET);
 
