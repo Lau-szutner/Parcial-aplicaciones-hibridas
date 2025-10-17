@@ -45,7 +45,7 @@ export const createSpend = async (req, res) => {
 
   try {
     validateNewSpend(email, category);
-    savedSpend = loadNewSpendData(
+    const savedSpend = loadNewSpendData(
       title,
       amount,
       description,

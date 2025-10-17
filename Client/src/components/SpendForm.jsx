@@ -32,13 +32,11 @@ const SpendForm = ({ email, onSubmit }) => {
     },
   });
 
-  // Al enviar el formulario, incluir el email en los datos
   const handleFormSubmit = async (data) => {
-    // Obtener el token desde las cookies
     const token = Cookies.get('token');
 
     console.log('Token enviado:', `Bearer ${token}`);
-    // Verifica si el token está presente
+
     if (!token) {
       alert('No se encontró un token de autenticación');
       return;

@@ -68,16 +68,24 @@ export async function validateNewSpend(email, category) {
   }
 }
 
-export async function loadNewSpendData() {
+export async function loadNewSpendData(
+  title,
+  amount,
+  description,
+  category,
+  email,
+  sharedWith,
+  userId
+) {
   const newSpend = new Spend({
-    userId, // Asignar el userId al gasto
-    title, // Título del gasto
-    amount, // Monto del gasto
-    description, // Descripción del gasto
-    category, // Categoría seleccionada
-    email, // Email del usuario autenticado
-    sharedWith: sharedWith || null, // Guardar null si no se ingresa
-    createdAt: new Date(), // Fecha de creación
+    title,
+    userId,
+    amount,
+    description,
+    category,
+    email,
+    sharedWith: sharedWith || null,
+    createdAt: new Date(),
   });
 
   const savedSpend = await newSpend.save();
