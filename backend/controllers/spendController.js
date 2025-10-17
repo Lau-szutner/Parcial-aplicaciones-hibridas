@@ -3,7 +3,15 @@ import {
   validateEmail,
   getAllspendsByEmail,
   getSpendsByDate,
+  validateNewSpend,
+  loadNewSpendData,
 } from '../services/spendServices.js';
+
+import {
+  handleGetSpendsByEmailError,
+  handleGetSpendsByMonthError,
+  handleCreateSpendError,
+} from '../utils/errorHandler.js';
 
 export const getSpendsByEmail = async (req, res) => {
   try {
@@ -13,104 +21,42 @@ export const getSpendsByEmail = async (req, res) => {
 
     res.status(200).json(spends);
   } catch (error) {
-    if (error.message.includes('email no proporcionado')) {
-      return res.status(400).json({ message: error.message });
-    }
-    if (error.message.includes('no se encontraron gastos')) {
-      return res.status(404).json({ message: error.message });
-    }
-    res.status(500).json({ message: 'Error al obtener los gastos' });
+    handleGetSpendsByEmailError(error, res);
   }
 };
 
 export const getSpendsByMonth = async (req, res) => {
-  const { email } = req.user;
-  const { year, month } = req.query;
   try {
+    const { email } = req.user;
+    const { year, month } = req.query;
+
     await validateEmail(email);
     const spends = await getSpendsByDate(email, year, month);
 
     res.status(200).json(spends);
   } catch (error) {
-    if (error.message.includes('no hay fechas')) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ message: 'Error interno del servidor.' });
+    handleGetSpendsByMonthError(error, res);
   }
 };
 
-export const getSharedSpends = async (req, res) => {
-  try {
-    const { email } = req.user;
-
-    const spends = await Spend.find({
-      email: email,
-      sharedWith: { $ne: null },
-    });
-
-    if (!spends.length) {
-      return res
-        .status(404)
-        .json({ message: 'No se encontraron gastos compartidos' });
-    }
-
-    res.status(200).json(spends);
-  } catch (error) {
-    console.error('Error al obtener los gastos compartidos:', error);
-    res.status(500).json({ message: 'Error interno del servidor.' });
-  }
-};
-
-export const getSharedSpendsWithMe = async (req, res) => {
-  try {
-    const { email } = req.user;
-
-    const spends = await Spend.find({
-      sharedWith: email,
-    });
-
-    if (!spends.length) {
-      return res
-        .status(404)
-        .json({ message: 'No se encontraron gastos compartidos' });
-    }
-
-    res.status(200).json(spends);
-  } catch (error) {
-    console.error('Error al obtener los gastos compartidos:', error);
-    res.status(500).json({ message: 'Error interno del servidor.' });
-  }
-};
-// Crear un gasto
 export const createSpend = async (req, res) => {
-  const { title, amount, description, category, email, sharedWith } = req.body; // Incluir sharedWith
-  const userId = req.user._id; // Obtener el userId del usuario autenticado
-  console.log(req.user);
+  const { title, amount, description, category, email, sharedWith } = req.body;
+  const userId = req.user._id;
+
   try {
-    // Validar que los campos requeridos estén presentes
-    if (!email || !category) {
-      return res
-        .status(400)
-        .json({ message: 'El email y la categoría son obligatorios' });
-    }
-
-    // Crear un nuevo gasto asociado al usuario autenticado
-    const newSpend = new Spend({
-      userId, // Asignar el userId al gasto
-      title, // Título del gasto
-      amount, // Monto del gasto
-      description, // Descripción del gasto
-      category, // Categoría seleccionada
-      email, // Email del usuario autenticado
-      sharedWith: sharedWith || null, // Guardar null si no se ingresa
-      createdAt: new Date(), // Fecha de creación
-    });
-
-    const savedSpend = await newSpend.save(); // Guardar el gasto en la base de datos
-    res.status(201).json(savedSpend); // Retornar el gasto guardado
+    validateNewSpend(email, category);
+    savedSpend = loadNewSpendData(
+      title,
+      amount,
+      description,
+      category,
+      email,
+      sharedWith,
+      userId
+    );
+    res.status(201).json(savedSpend);
   } catch (error) {
-    console.error('Error al crear el gasto:', error);
-    res.status(400).json({ message: error.message }); // Manejo de errores
+    handleCreateSpendError(error);
   }
 };
 
@@ -159,5 +105,48 @@ export const editSpendById = async (req, res) => {
   } catch (error) {
     console.error('Error al editar el gasto:', error);
     res.status(500).json({ message: 'Error al editar el gasto' });
+  }
+};
+
+export const getSharedSpends = async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    const spends = await Spend.find({
+      email: email,
+      sharedWith: { $ne: null },
+    });
+
+    if (!spends.length) {
+      return res
+        .status(404)
+        .json({ message: 'No se encontraron gastos compartidos' });
+    }
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener los gastos compartidos:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
+export const getSharedSpendsWithMe = async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    const spends = await Spend.find({
+      sharedWith: email,
+    });
+
+    if (!spends.length) {
+      return res
+        .status(404)
+        .json({ message: 'No se encontraron gastos compartidos' });
+    }
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener los gastos compartidos:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
