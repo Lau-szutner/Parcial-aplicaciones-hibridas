@@ -5,12 +5,14 @@ import {
   getSpendsByDate,
   validateNewSpend,
   loadNewSpendData,
+  findSpendByIdAndUpdate,
 } from '../services/spendServices.js';
 
 import {
   handleGetSpendsByEmailError,
   handleGetSpendsByMonthError,
   handleCreateSpendError,
+  handleEditSpendByIdError,
 } from '../utils/errorHandler.js';
 
 export const getSpendsByEmail = async (req, res) => {
@@ -60,12 +62,11 @@ export const createSpend = async (req, res) => {
   }
 };
 
-// Eliminar un gasto
 export const deleteSpendById = async (req, res) => {
-  const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
+  const { id } = req.params;
 
   try {
-    const deletedSpend = await Spend.findByIdAndDelete(id); // Eliminar el gasto con el ID proporcionado
+    const deletedSpend = await Spend.findByIdAndDelete(id);
 
     if (!deletedSpend) {
       return res.status(404).json({ message: 'Gasto no encontrado' });
@@ -77,34 +78,24 @@ export const deleteSpendById = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar el gasto' });
   }
 };
-// Editar un gasto
+
 export const editSpendById = async (req, res) => {
-  const { id } = req.params; // Obtener el ID del gasto desde los parámetros de la URL
-  const { title, amount, description, category, sharedWith } = req.body; // Datos a actualizar
+  const { id } = req.params;
+  const { title, amount, description, category, sharedWith } = req.body;
 
   try {
-    // Buscar y actualizar el gasto con los datos proporcionados
-    const updatedSpend = await Spend.findByIdAndUpdate(
+    const updatedSpend = findSpendByIdAndUpdate(
       id,
-      {
-        title, // Título del gasto
-        amount, // Monto del gasto
-        description, // Descripción del gasto
-        category, // Categoría seleccionada
-        sharedWith: sharedWith || null, // Email compartido (si aplica)
-      },
-      { new: true } // Retornar el documento actualizado
+      title,
+      amount,
+      description,
+      category,
+      sharedWith
     );
 
-    // Verificar si se encontró y actualizó el gasto
-    if (!updatedSpend) {
-      return res.status(404).json({ message: 'Gasto no encontrado' });
-    }
-
-    res.status(200).json(updatedSpend); // Retornar el gasto actualizado
+    res.status(200).json(updatedSpend);
   } catch (error) {
-    console.error('Error al editar el gasto:', error);
-    res.status(500).json({ message: 'Error al editar el gasto' });
+    handleEditSpendByIdError(error);
   }
 };
 

@@ -91,3 +91,22 @@ export async function loadNewSpendData(
   const savedSpend = await newSpend.save();
   return savedSpend;
 }
+
+export async function findSpendByIdAndUpdate(
+  id,
+  title,
+  amount,
+  description,
+  category,
+  sharedWith
+) {
+  const updatedSpend = await Spend.findByIdAndUpdate(id, {
+    title,
+    amount,
+    description,
+    category,
+    sharedWith: sharedWith || null,
+  });
+
+  return updatedSpend;
+}

@@ -39,3 +39,7 @@ export function handleCreateSpendError(error, res) {
 
   return res.status(500).json({ message: 'Error interno del servidor.' });
 }
+
+export function handleEditSpendByIdError() {
+  return res.status(500).json({ message: 'Error al editar el gasto' });
+}

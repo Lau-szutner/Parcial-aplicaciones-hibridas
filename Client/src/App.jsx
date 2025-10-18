@@ -13,8 +13,15 @@ function App() {
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(null);
   const location = useLocation();
+  const isErrorPage = location.pathname === '/404';
 
-  // Consumir las cookies al cargar el componente
+  function handleLogout() {
+    Cookies.remove('token');
+    Cookies.remove('email');
+    setToken(null);
+    setEmail(null);
+  }
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedToken = Cookies.get('token');
@@ -24,22 +31,10 @@ function App() {
     }
   }, []);
 
-  // Manejar logout (ejemplo básico)
-  const handleLogout = () => {
-    Cookies.remove('token');
-    Cookies.remove('email');
-    setToken(null);
-    setEmail(null);
-  };
-
-  // Verificar si la ruta actual es una página especial (en construcción o no encontrada)
-  const isSpecialPage = location.pathname === '/404';
-
   return (
     <div className="flex flex-col bg-stone-800 h-full">
       <Navbar userEmail={email} />
 
-      {/* Mostrar el formulario de registro si no hay token */}
       {!token ? (
         <section className="mt-10">
           <h2 className="text-xl font-semibold mb-4 text-center text-white">
@@ -49,10 +44,8 @@ function App() {
         </section>
       ) : (
         <>
-          {/* Mostrar el contenido principal si hay token, excepto en rutas especiales */}
-
-          <div className="grid grid-cols-[0.33fr_1fr] h-full">
-            {!isSpecialPage && email && (
+          <div className="grid grid-cols-[0.25fr_1fr] h-full">
+            {!isErrorPage && (
               <aside className="text-white bg-stone-900 p-20 h-full">
                 <h1 className="text-3xl font-bold text-center">
                   Bienvenido a Spend Tacker
@@ -72,7 +65,6 @@ function App() {
               <Route path="/" element={<Home email={email} />} />
               <Route path="/graficos" element={<Graficos />} />
               <Route path="/GastosCompartidos" element={<SharedSpends />} />
-              {/* Ruta de 404 para rutas no encontradas */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

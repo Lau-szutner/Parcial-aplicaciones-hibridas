@@ -48,12 +48,9 @@ const Spends = () => {
           spend._id === id ? { ...spend, ...updatedSpendData } : spend
         )
       );
-      console.log(message);
     } else {
       console.log(message);
     }
-
-    console.log(updatedSpendData);
   }
 
   if (loading) return <p>Cargando gastos...</p>;
