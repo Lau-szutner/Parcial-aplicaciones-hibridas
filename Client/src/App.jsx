@@ -3,6 +3,7 @@ import Navbar from './components/Navbar.jsx';
 import Home from './views/Home.jsx';
 import SharedSpends from './views/SharedSpends.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
+import BackOffice from './views/BackOffice.jsx';
 import Cookies from 'js-cookie';
 import NotFound from './views/NotFound';
 import Graficos from './views/Graficos.jsx';
@@ -32,7 +33,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-stone-800 h-full">
+    <div className="flex flex-col bg-stone-800 h-full text-white">
       <Navbar userEmail={email} />
 
       {!token ? (
@@ -66,6 +67,7 @@ function App() {
               <Route path="/graficos" element={<Graficos />} />
               <Route path="/GastosCompartidos" element={<SharedSpends />} />
               <Route path="*" element={<NotFound />} />
+              <Route path="/back" element={<BackOffice />} />
             </Routes>
           </div>
         </>

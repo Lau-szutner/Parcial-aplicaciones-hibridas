@@ -32,7 +32,6 @@ function Graficos() {
     }
   };
 
-  // Recupera los datos desde las cookies al cargar el componente
   useEffect(() => {
     const savedData = Cookies.get('spendData');
     if (savedData) {
