@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 
 import spendRoutes from './routes/spendRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import backOfficeRoutes from './routes/backOfficeRoutes.js';
 import { protect } from './middleware/authMiddleware.js';
 import cors from 'cors';
 
@@ -34,7 +35,7 @@ app.get('/api/data', (req, res) => {
 
 app.use('/spend', protect, spendRoutes);
 app.use('/auth', authRoutes);
-app.use('/backOffice', authRoutes);
+app.use('/backOffice', backOfficeRoutes);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
