@@ -178,6 +178,59 @@ const fetchSharedSpendsWithMe = async () => {
   }
 };
 
+const getAllUsers = async () => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(`http://localhost:3000/backOffice/users`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`No se encontraron usuarios`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
+const deleteUser = async (id) => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/backOffice/users/deleteUser/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`No se encontraron usuarios`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
 export {
   getTokenFromCookies,
   fetchAllSpends,
@@ -186,4 +239,6 @@ export {
   getSpendsByMonth,
   getSharedSpends,
   fetchSharedSpendsWithMe,
+  getAllUsers,
+  deleteUser,
 };

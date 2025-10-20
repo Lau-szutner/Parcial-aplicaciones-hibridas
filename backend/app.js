@@ -35,7 +35,7 @@ app.get('/api/data', (req, res) => {
 
 app.use('/spend', protect, spendRoutes);
 app.use('/auth', authRoutes);
-app.use('/backOffice', backOfficeRoutes);
+app.use('/backOffice', protect, backOfficeRoutes);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

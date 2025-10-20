@@ -1,11 +1,14 @@
 import express from 'express';
-import { getAllUsers } from '../controllers/backOfficeController.js';
+import {
+  getAllUsers,
+  deleteUser,
+} from '../controllers/backOfficeController.js';
 
 const router = express.Router();
 
 router.get('/users', getAllUsers);
 
-// router.post('/login', loginUser);
+router.delete('/users/deleteUser/:id', deleteUser);
 
 // router.post('/logout', logoutUser);
 
