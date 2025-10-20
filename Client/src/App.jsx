@@ -16,62 +16,68 @@ function App() {
   const location = useLocation();
   const isErrorPage = location.pathname === '/404';
 
-  function handleLogout() {
+  const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('email');
     setToken(null);
     setEmail(null);
-  }
+  };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedToken = Cookies.get('token');
-      const savedEmail = Cookies.get('email');
-      setToken(savedToken || null);
-      setEmail(savedEmail || null);
-    }
+    const savedToken = Cookies.get('token');
+    const savedEmail = Cookies.get('email');
+    setToken(savedToken || null);
+    setEmail(savedEmail || null);
   }, []);
 
   return (
-    <div className="flex flex-col bg-stone-800 h-full text-white">
+    <div className="min-h-screen flex flex-col bg-stone-800 text-white">
+      {/* Navbar */}
       <Navbar userEmail={email} />
 
-      {!token ? (
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold mb-4 text-center text-white">
-            Regístrate para continuar
-          </h2>
-          <RegisterForm setEmail={setEmail} setToken={setToken} />
-        </section>
-      ) : (
-        <>
-          <div className="grid grid-cols-[0.25fr_1fr] h-full">
+      {/* Contenido principal */}
+      <main className="flex-grow flex">
+        {!token ? (
+          <section className="flex flex-col items-center justify-center flex-grow p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Regístrate para continuar
+            </h2>
+            <RegisterForm setEmail={setEmail} setToken={setToken} />
+          </section>
+        ) : (
+          <>
+            {/* Sidebar */}
             {!isErrorPage && (
-              <aside className="text-white bg-stone-900 p-20 h-full">
-                <h1 className="text-3xl font-bold text-center">
-                  Bienvenido a Spend Tacker
-                </h1>
-                <p className="mt-4 text-center">
-                  Bienvenido/a, <span className="font-bold">{email}</span>
-                </p>
+              <aside className="w-64 bg-stone-900 flex flex-col items-center justify-start  py-8 px-4">
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold mb-2">Spend Tracker</h1>
+                  <p>
+                    Bienvenido/a, <span className="font-bold">{email}</span>
+                  </p>
+                </div>
+
                 <button
-                  className="bg-red-500 text-white px-4 py-2 mt-4 rounded mx-auto block"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
                   onClick={handleLogout}
                 >
                   Logout
                 </button>
               </aside>
             )}
-            <Routes>
-              <Route path="/" element={<Home email={email} />} />
-              <Route path="/graficos" element={<Graficos />} />
-              <Route path="/GastosCompartidos" element={<SharedSpends />} />
-              <Route path="*" element={<NotFound />} />
-              <Route path="/back" element={<BackOffice />} />
-            </Routes>
-          </div>
-        </>
-      )}
+
+            {/* Contenido dinámico */}
+            <section className="flex-grow overflow-auto p-6">
+              <Routes>
+                <Route path="/" element={<Home email={email} />} />
+                <Route path="/graficos" element={<Graficos />} />
+                <Route path="/GastosCompartidos" element={<SharedSpends />} />
+                <Route path="/back" element={<BackOffice />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </section>
+          </>
+        )}
+      </main>
     </div>
   );
 }
