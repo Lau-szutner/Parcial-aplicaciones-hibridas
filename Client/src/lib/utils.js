@@ -231,6 +231,31 @@ const deleteUser = async (id) => {
   }
 };
 
+const isAdminUser = async () => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(`http://localhost:3000/backOffice`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`No hay credenciales validas`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
 export {
   getTokenFromCookies,
   fetchAllSpends,
@@ -241,4 +266,5 @@ export {
   fetchSharedSpendsWithMe,
   getAllUsers,
   deleteUser,
+  isAdminUser,
 };

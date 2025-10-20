@@ -71,7 +71,7 @@ function App() {
                 <Route path="/" element={<Home email={email} />} />
                 <Route path="/graficos" element={<Graficos />} />
                 <Route path="/GastosCompartidos" element={<SharedSpends />} />
-                <Route path="/back" element={<BackOffice />} />
+                <Route path="/backOffice" element={<BackOffice />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </section>

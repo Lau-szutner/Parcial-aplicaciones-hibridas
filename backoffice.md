@@ -1,8 +1,8 @@
 ## 1 Gestión de usuarios
 
-- Ver la lista de usuarios registrados.
+- [x] Ver la lista de usuarios registrados.
 
-- Eliminar usuarios inactivos o falsos.
+- [x] Eliminar usuarios inactivos o falsos.
 
 - Modificar datos o roles (por ejemplo, convertir alguien en admin).
 
