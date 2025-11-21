@@ -20,3 +20,19 @@ export const createCategory = async (req, res) => {
     });
   }
 };
+
+export const getAllCategories = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const category = await Category.find({ user: userId });
+
+    res.status(200).json(category);
+  } catch (error) {
+    console.error('Error al crear categoría:', error);
+    res.status(500).json({
+      message: 'Error interno del servidor',
+      error: error.message,
+    });
+  }
+};

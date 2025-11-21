@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { spendValidationSchema } from '../validation/spendValidationSchema';
 import axios from 'axios'; // Importar axios
 import Cookies from 'js-cookie'; // Importar js-cookie para manejar las cookies
+import { data } from 'react-router-dom';
 
 const SpendForm = ({ email, onSubmit }) => {
   const [categoria, setCategoria] = useState('Comida');
-  const categorias = [
-    'Comida',
-    'Servicios',
-    'Gastos varios',
-    'Transporte',
-    'Salud',
-  ];
+
+  const [categorias, setCategorias] = useState(['Nulo']);
 
   const handleCategoriaClick = (categoriaSeleccionada) => {
     setCategoria(categoriaSeleccionada);
@@ -73,6 +69,37 @@ const SpendForm = ({ email, onSubmit }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const token = Cookies.get('token');
+
+      if (!token) {
+        console.error('No hay token de usuario disponible.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/category/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        //setCategorias;
+
+        const dataJson = await response.json();
+
+        const categoryNames = dataJson.map((category) => category.name);
+      } catch (error) {
+        console.error('Error de red o servidor:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  3;
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -185,14 +212,10 @@ const SpendForm = ({ email, onSubmit }) => {
         )}
       </div>
 
-      <div className="mt-4 text-sm text-gray-500">
-        <span>Categoría seleccionada: </span>
-        <span className="font-semibold">{categoria}</span>
-      </div>
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full py-3 my-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         Cargar
       </button>
