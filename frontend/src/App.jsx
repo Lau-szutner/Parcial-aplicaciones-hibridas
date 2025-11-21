@@ -39,9 +39,6 @@ function App() {
       <main className="flex-grow flex">
         {!token ? (
           <section className="flex flex-col items-center justify-center flex-grow p-6">
-            <h2 className="text-xl font-semibold mb-4">
-              Regístrate para continuar
-            </h2>
             <RegisterForm setEmail={setEmail} setToken={setToken} />
           </section>
         ) : (
