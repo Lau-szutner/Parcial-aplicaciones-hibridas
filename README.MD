@@ -63,9 +63,9 @@ Este comando ejecuta varios procesos de instalación y levanta tanto el backend 
 Cuando ejecutes `npm run start`, deberías ver la siguiente información en la terminal:
 
 ```bash
-➞  Local:   http://localhost:5173/
+➞  Local:   http://127.0.0.1:5173/
 ➞  Network: use --host to expose
-Servidor corriendo en http://localhost:3000
+Servidor corriendo en http://127.0.0.1:3000
 Conexión con MongoDB exitosa
 ```
 

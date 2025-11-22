@@ -50,7 +50,7 @@ const SpendForm = ({ email, onSubmit }) => {
 
       // Realizar la solicitud POST al backend para crear un gasto
       const response = await axios.post(
-        'http://localhost:3000/spend',
+        'http://127.0.0.1:3000/spend',
         formData,
         {
           headers: {
@@ -79,7 +79,7 @@ const SpendForm = ({ email, onSubmit }) => {
       }
 
       try {
-        const response = await fetch('http://localhost:3000/category/', {
+        const response = await fetch('http://127.0.0.1:3000/category/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

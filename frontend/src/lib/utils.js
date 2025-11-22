@@ -13,7 +13,7 @@ const fetchAllSpends = async () => {
   const token = getTokenFromCookies();
   try {
     const response = await fetch(
-      'http://localhost:3000/spend/getSpendsByEmail',
+      'http://127.0.0.1:3000/spend/getSpendsByEmail',
       {
         method: 'GET',
         headers: {
@@ -39,7 +39,7 @@ const deleteSpendById = async (id) => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://localhost:3000/spend/${id}`, {
+    const response = await fetch(`http://127.0.0.1:3000/spend/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const editSpendById = async (id, updatedSpend) => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://localhost:3000/spend/${id}`, {
+    const response = await fetch(`http://127.0.0.1:3000/spend/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const getSpendsByMonth = async (year, month) => {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/spend/getSpendsByMonth?year=${year}&month=${month}`,
+      `http://127.0.0.1:3000/spend/getSpendsByMonth?year=${year}&month=${month}`,
 
       {
         method: 'GET',
@@ -128,7 +128,7 @@ const getSharedSpends = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/spend/getSharedSpends`,
+      `http://127.0.0.1:3000/spend/getSharedSpends`,
       {
         method: 'GET',
         headers: {
@@ -155,7 +155,7 @@ const fetchSharedSpendsWithMe = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/spend/getSharedSpendsWithMe`,
+      `http://127.0.0.1:3000/spend/getSharedSpendsWithMe`,
       {
         method: 'GET',
         headers: {
@@ -182,7 +182,7 @@ const getAllUsers = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://localhost:3000/backOffice/users`, {
+    const response = await fetch(`http://127.0.0.1:3000/backOffice/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ const deleteUser = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/backOffice/users/deleteUser/${id}`,
+      `http://127.0.0.1:3000/backOffice/users/deleteUser/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -235,7 +235,7 @@ const isAdminUser = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://localhost:3000/backOffice`, {
+    const response = await fetch(`http://127.0.0.1:3000/backOffice`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

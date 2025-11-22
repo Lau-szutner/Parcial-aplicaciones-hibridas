@@ -53,7 +53,7 @@ const RegisterForm = ({ setEmail, setToken }) => {
   const handleRegister = async (data) => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/auth/register',
+        'http://127.0.0.1:3000/auth/register',
         data
       );
       Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
@@ -74,7 +74,7 @@ const RegisterForm = ({ setEmail, setToken }) => {
   const handleLogin = async (data) => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/auth/login',
+        'http://127.0.0.1:3000/auth/login',
         data
       );
       Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
@@ -177,18 +177,18 @@ const RegisterForm = ({ setEmail, setToken }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
       >
         {isLogin ? 'Iniciar Sesión' : 'Registrar'}
       </button>
 
       {/* Toggle between login and register */}
-      <p className="text-sm text-center text-white">
+      <p className="text-sm text-center text-white ">
         {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
         <button
           type="button"
           onClick={toggleForm}
-          className="text-green-500 ml-1 font-bold"
+          className="text-green-500 ml-1 font-bold cursor-pointer"
         >
           {isLogin ? 'Regístrate' : 'Inicia sesión'}
         </button>
