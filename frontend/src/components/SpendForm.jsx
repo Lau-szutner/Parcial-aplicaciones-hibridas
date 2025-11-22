@@ -2,14 +2,69 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { spendValidationSchema } from '../validation/spendValidationSchema';
-import axios from 'axios'; // Importar axios
-import Cookies from 'js-cookie'; // Importar js-cookie para manejar las cookies
-import { data } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const SpendForm = ({ email, onSubmit }) => {
-  const [categoria, setCategoria] = useState('Comida');
+  const [showNewCategory, setShowNewCategory] = useState(true);
+  const [setNewCategory, setMName] = useState('');
+  const [message, setMessage] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+  const [categoria, setCategoria] = useState('');
+  const BASE_URL = 'http://127.0.0.1:3000';
 
-  const [categorias, setCategorias] = useState(['Nulo']);
+  const handleNewCategory = (event) => {
+    setMName(event.target.value);
+  };
+
+  const handleNewCategorySubmit = async () => {
+    setMessage(null); // Limpiar mensajes anteriores
+
+    if (setNewCategory.trim() === '') {
+      setMessage({
+        type: 'error',
+        text: 'El nombre de la categoría no puede estar vacío.',
+      });
+      return;
+    }
+
+    const token = Cookies.get('token');
+    if (!token) {
+      setMessage({
+        type: 'error',
+        text: 'No se encontró un token de autenticación.',
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/category/newCategory`,
+        { name: setNewCategory }, // <-- DATA (setNewCategory) enviada en el body
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage({
+        type: 'success',
+        text: `Categoría "${setNewCategory}" creada con éxito.`,
+      });
+      setMName('');
+      setShowNewCategory(false);
+      await fetchCategories();
+      setCategoria(setNewCategory);
+    } catch (error) {
+      console.error('Error al crear la categoría:', error);
+      setMessage({
+        type: 'error',
+        text: 'Error al crear la categoría. Inténtalo de nuevo.',
+      });
+    }
+  };
 
   const handleCategoriaClick = (categoriaSeleccionada) => {
     setCategoria(categoriaSeleccionada);
@@ -21,46 +76,30 @@ const SpendForm = ({ email, onSubmit }) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(spendValidationSchema),
-    defaultValues: {
-      title: '',
-      amount: '',
-      description: '',
-    },
+    defaultValues: { title: '', amount: '', description: '' },
   });
 
   const handleFormSubmit = async (data) => {
     const token = Cookies.get('token');
-
     console.log('Token enviado:', `Bearer ${token}`);
-
     if (!token) {
       alert('No se encontró un token de autenticación');
       return;
     }
-
     const formData = {
       ...data,
-      email, // Agregar email principal del usuario
+      email,
       category: categoria,
-      sharedWith: data.sharedWith || null, // Asegurar que sea null si no se ingresa
+      sharedWith: data.sharedWith || null,
     };
-
     try {
       console.log(formData);
-
-      // Realizar la solicitud POST al backend para crear un gasto
-      const response = await axios.post(
-        'http://127.0.0.1:3000/spend',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Usar el token de las cookies
-          },
-        }
-      );
-
-      // Llamar a la función onSubmit con la respuesta del backend
+      const response = await axios.post(`${BASE_URL}/spend`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
       onSubmit(response.data);
       alert('Gasto creado exitosamente');
     } catch (error) {
@@ -69,37 +108,33 @@ const SpendForm = ({ email, onSubmit }) => {
     }
   };
 
+  const fetchCategories = async () => {
+    const token = Cookies.get('token');
+    if (!token) {
+      console.error('No hay token de usuario disponible.');
+      return;
+    }
+    try {
+      const response = await fetch(`${BASE_URL}/category/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const dataJson = await response.json();
+      const categoryNames = dataJson.map((category) => category.name);
+      setCategorias(categoryNames);
+      if (!categoria && categoryNames.length > 0)
+        setCategoria(categoryNames[0]);
+    } catch (error) {
+      console.error('Error de red o servidor:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      const token = Cookies.get('token');
-
-      if (!token) {
-        console.error('No hay token de usuario disponible.');
-        return;
-      }
-
-      try {
-        const response = await fetch('http://127.0.0.1:3000/category/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        //setCategorias;
-
-        const dataJson = await response.json();
-
-        const categoryNames = dataJson.map((category) => category.name);
-      } catch (error) {
-        console.error('Error de red o servidor:', error);
-      }
-    };
-
     fetchCategories();
   }, []);
-  3;
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -174,22 +209,69 @@ const SpendForm = ({ email, onSubmit }) => {
         )}
       </div>
 
-      {/*Categoria*/}
       <div className="mt-4 flex flex-wrap gap-3">
         {categorias.map((categoriaOption) => (
           <div
             key={categoriaOption}
             onClick={() => handleCategoriaClick(categoriaOption)}
-            className={`cursor-pointer px-4 py-2 rounded-md text-sm font-medium text-white text-center transition-colors duration-200 ease-in-out ${
+            className={`cursor-pointer px-4 py-2 rounded-md text-sm font-medium text-white flex items-center justify-center transition-colors duration-200 ease-in-out ${
               categoria === categoriaOption
                 ? 'bg-indigo-600'
                 : 'bg-gray-300 hover:bg-gray-400'
             }`}
           >
-            {categoriaOption}
+            <p className="m-0">{categoriaOption}</p>
           </div>
         ))}
+        {showNewCategory == false && (
+          <button
+            type="button"
+            onClick={() => setShowNewCategory(true)}
+            className="p-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md cursor-pointer transition duration-150 flex-shrink-0"
+            title="Guardar nueva categoría"
+          >
+            Nueva Categoria
+          </button>
+        )}
       </div>
+
+      {showNewCategory && (
+        <div className="mt-4 flex items-end gap-3  rounded-lg ">
+          <div className="space-y-1 w-full">
+            <label
+              htmlFor="setNewCategory"
+              className="block text-sm font-semibold text-gray-700"
+            >
+              Nombre de la Nueva Categoría
+            </label>
+            <input
+              id="setNewCategory"
+              value={setNewCategory}
+              onChange={handleNewCategory}
+              placeholder="Ej: Viajes, Regalos, Inversiones"
+              className={`w-full p-3 border border-indigo-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150`}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleNewCategorySubmit}
+            className="p-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-md cursor-pointer transition duration-150 flex-shrink-0"
+            title="Guardar nueva categoría"
+          >
+            Agregar categoria
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowNewCategory(false)}
+            className="p-3 bg-red-600 hover:bg-red-800 text-white rounded-xl shadow-md cursor-pointer transition duration-150 flex-shrink-0"
+            title="Guardar nueva categoría"
+          >
+            Cerrar
+          </button>
+        </div>
+      )}
 
       {/* Usuario compartido */}
       <div className="space-y-2">

@@ -1,6 +1,6 @@
 import { Category } from '../models/categoryModel.js';
 
-export const createCategory = async (req, res) => {
+export const newCategory = async (req, res) => {
   try {
     const userId = req.user._id;
 
