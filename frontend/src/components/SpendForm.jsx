@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createSpend } from '../lib/utils';
-import axios from 'axios';
-
-const BASE_URL = 'http://127.0.0.1:3000';
+import Category from './Category';
 
 const SpendForm = ({ email, onSubmit }) => {
   const [title, setTitle] = useState('Taxi al trabajo');
@@ -34,36 +32,11 @@ const SpendForm = ({ email, onSubmit }) => {
     onSubmit && onSubmit(data);
     alert('Gasto creado exitosamente');
 
-    // limpiar campos
     setTitle('');
     setAmount('');
     setDescription('');
     setSharedWith('');
   };
-
-  const fetchCategories = async () => {
-    const token = Cookies.get('token');
-    if (!token) return;
-    try {
-      const res = await fetch(`${BASE_URL}/category/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      const names = Array.isArray(data) ? data.map((c) => c.name) : [];
-      setCategories(names);
-      if (!selectedCategory && names.length > 0) setSelectedCategory(names[0]);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   return (
     <form
@@ -116,6 +89,9 @@ const SpendForm = ({ email, onSubmit }) => {
           onChange={(e) => setDescription(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+      </div>
+      <div>
+        <Category />
       </div>
 
       <div className="space-y-2 mt-4">

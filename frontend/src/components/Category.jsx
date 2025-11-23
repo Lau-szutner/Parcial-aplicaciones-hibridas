@@ -1,32 +1,46 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { getTokenFromCookies } from '../lib/utils';
 
 const Category = () => {
-  const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(true);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [message, setMessage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  // CATEGORIAS
+  const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(true);
+
+  const BASE_URL = 'http://127.0.0.1:3000';
+
   const handleNewCategoryNameChange = (e) => setNewCategoryName(e.target.value);
 
   const handleCreateNewCategory = async () => {
     setMessage(null);
+
+    function changeMessageVisility() {
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
 
     if (newCategoryName.trim() === '') {
       setMessage({
         type: 'error',
         text: 'El nombre de la categoría no puede estar vacío.',
       });
+
+      changeMessageVisility();
       return;
     }
 
-    const token = Cookies.get('token');
+    const token = getTokenFromCookies();
     if (!token) {
       setMessage({
         type: 'error',
         text: 'No se encontró un token de autenticación.',
       });
+
+      changeMessageVisility();
       return;
     }
 
@@ -46,6 +60,7 @@ const Category = () => {
         type: 'success',
         text: `Categoría "${newCategoryName}" creada con éxito.`,
       });
+      changeMessageVisility();
       setNewCategoryName('');
       setIsNewCategoryVisible(false);
       await fetchCategories();
@@ -61,21 +76,45 @@ const Category = () => {
 
   const handleCategoryClick = (category) => setSelectedCategory(category);
 
+  const fetchCategories = async () => {
+    const token = getTokenFromCookies();
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${BASE_URL}/category/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      const names = Array.isArray(data) ? data.map((c) => c.name) : [];
+      setCategories(names);
+      if (!selectedCategory && names.length > 0) setSelectedCategory(names[0]);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <div>
-      {' '}
       <div className="mt-4 flex flex-wrap gap-3">
-        {categories.map((cat) => (
+        {categories.map((category) => (
           <div
-            key={cat}
-            onClick={() => handleCategoryClick(cat)}
+            key={category}
+            onClick={() => handleCategoryClick(category)}
             className={`cursor-pointer px-4 py-2 rounded-md text-sm font-medium text-white flex items-center justify-center transition-colors duration-200 ease-in-out ${
-              selectedCategory === cat
+              selectedCategory === category
                 ? 'bg-indigo-600'
                 : 'bg-gray-300 hover:bg-gray-400'
             }`}
           >
-            <p className="m-0">{cat}</p>
+            <p className="m-0">{category}</p>
           </div>
         ))}
         {!isNewCategoryVisible && (
@@ -88,6 +127,7 @@ const Category = () => {
           </button>
         )}
       </div>
+
       {isNewCategoryVisible && (
         <div className="mt-4 flex items-end gap-3 rounded-lg">
           <div className="space-y-1 w-full">
@@ -95,7 +135,7 @@ const Category = () => {
               htmlFor="newCategoryName"
               className="block text-sm font-semibold text-gray-700"
             >
-              Nombre de la Nueva Categoría
+              Nombre de la Nueva Categoría:
             </label>
             <input
               id="newCategoryName"

@@ -44,7 +44,7 @@ function App() {
         ) : (
           <>
             {/* Sidebar */}
-            {!isErrorPage && (
+            {/* {!isErrorPage && (
               <aside className="w-64 bg-stone-900 flex flex-col items-center justify-start  py-8 px-4">
                 <div className="text-center">
                   <h1 className="text-2xl font-bold mb-2">Spend Tracker</h1>
@@ -60,7 +60,7 @@ function App() {
                   Logout
                 </button>
               </aside>
-            )}
+            )} */}
 
             {/* Contenido dinámico */}
             <section className="flex-grow overflow-auto p-6">
