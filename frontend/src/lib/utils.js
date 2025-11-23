@@ -35,6 +35,33 @@ const fetchAllSpends = async () => {
   }
 };
 
+const createSpend = async (data) => {
+  const token = getTokenFromCookies();
+
+  console.log(data);
+
+  try {
+    const response = await fetch('http://127.0.0.1:3000/spend/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Error al crear el gasto');
+    }
+
+    return { data: result, error: null };
+  } catch (error) {
+    return { data: null, error: error.message };
+  }
+};
+
 const deleteSpendById = async (id) => {
   const token = getTokenFromCookies();
 
@@ -235,7 +262,7 @@ const isAdminUser = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/backOffice`, {
+    const response = await fetch(`http://127.0.0.1:3000/auth/backOffice`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -257,6 +284,7 @@ const isAdminUser = async () => {
 };
 
 export {
+  createSpend,
   getTokenFromCookies,
   fetchAllSpends,
   deleteSpendById,

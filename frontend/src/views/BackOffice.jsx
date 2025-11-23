@@ -2,8 +2,9 @@ import TotalUsers from '../components/backoffice/TotalUsers';
 import LoginAdmin from '../components/backoffice/LoginAdmin';
 import { useState, useEffect } from 'react';
 import { isAdminUser } from '../lib/utils';
+
 const backOffice = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
     const userAdmin = async () => {

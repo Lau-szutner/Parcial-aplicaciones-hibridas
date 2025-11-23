@@ -21,8 +21,8 @@ const spendSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Comida', 'Servicios', 'Gastos varios', 'Transporte', 'Salud'],
-    required: [true, 'La categoría es obligatoria'],
+
+    required: [false, 'La categoría es obligatoria'],
   },
   email: {
     type: String,

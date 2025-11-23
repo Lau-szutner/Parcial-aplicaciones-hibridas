@@ -36,7 +36,7 @@ const Spend = ({
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 w-full max-w-sm">
       {isEditing ? (
-        <div>
+        <div className="text-black">
           <input
             type="text"
             name="title"
