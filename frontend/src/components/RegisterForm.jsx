@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import * as yup from 'yup';
-import Cookies from 'js-cookie'; // Importamos js-cookie para manejar cookies
+import Cookies from 'js-cookie';
 
 // Validación de formulario con Yup
 const registerValidationSchema = yup.object({
@@ -34,6 +34,8 @@ const loginValidationSchema = yup.object({
 
 const RegisterForm = ({ setEmail, setToken }) => {
   const [isLogin, setIsLogin] = useState(true); // Estado para determinar si es login o registro
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -131,14 +133,55 @@ const RegisterForm = ({ setEmail, setToken }) => {
         >
           Contraseña
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register('password')}
-          className={`w-full p-3 border ${
-            errors.password ? 'border-red-500' : 'border-gray-300'
-          } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-        />
+        <div className="flex">
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            {...register('password')}
+            className={`flex-1 p-3 border ${
+              errors.password ? 'border-red-500' : 'border-gray-300'
+            } rounded-l-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((s) => !s)}
+            className="px-3 bg-gray-200 text-gray-700 rounded-r-lg border border-l-0 hover:bg-gray-300 flex items-center justify-center"
+            aria-label={
+              showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+            }
+          >
+            {showPassword ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5 0-9.27-3.11-11-7 1.07-2.31 2.89-4.19 5.11-5.35" />
+                <path d="M1 1l22 22" />
+                <path d="M9.88 9.88A3 3 0 0 0 14.12 14.12" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
         {errors.password && (
           <p className="text-sm text-red-500">{errors.password.message}</p>
         )}
@@ -153,14 +196,57 @@ const RegisterForm = ({ setEmail, setToken }) => {
           >
             Confirmar Contraseña
           </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            {...register('confirmPassword')}
-            className={`w-full p-3 border ${
-              errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-            } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-          />
+          <div className="flex">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              {...register('confirmPassword')}
+              className={`flex-1 p-3 border ${
+                errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+              } rounded-l-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((s) => !s)}
+              className="px-3 bg-gray-200 text-gray-700 rounded-r-lg border border-l-0 hover:bg-gray-300 flex items-center justify-center"
+              aria-label={
+                showConfirmPassword
+                  ? 'Ocultar confirmación'
+                  : 'Mostrar confirmación'
+              }
+            >
+              {showConfirmPassword ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5 0-9.27-3.11-11-7 1.07-2.31 2.89-4.19 5.11-5.35" />
+                  <path d="M1 1l22 22" />
+                  <path d="M9.88 9.88A3 3 0 0 0 14.12 14.12" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
+            </button>
+          </div>
           {errors.confirmPassword && (
             <p className="text-sm text-red-500">
               {errors.confirmPassword.message}
