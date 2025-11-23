@@ -19,6 +19,7 @@ const backOffice = () => {
 
   return (
     <div>
+      <h1>BACK OFFICE</h1>
       {isAdmin == true ? <TotalUsers></TotalUsers> : <LoginAdmin></LoginAdmin>}
     </div>
   );

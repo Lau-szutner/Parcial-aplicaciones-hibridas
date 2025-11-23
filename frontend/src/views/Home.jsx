@@ -3,6 +3,7 @@ import SpendForm from '../components/SpendForm.jsx';
 import Spends from '../components/Spends.jsx';
 
 const Home = ({ email }) => {
+  console.log(email);
   const [newSpendForm, setNewSpendForm] = useState(false);
 
   const toggleFormVisibility = () => {

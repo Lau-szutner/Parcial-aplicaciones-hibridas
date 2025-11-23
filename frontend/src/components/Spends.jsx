@@ -16,8 +16,10 @@ const Spends = () => {
     const loadSpends = async () => {
       setLoading(true);
       const { data, error } = await fetchAllSpends();
+      console.log(error);
       if (error) setError(error);
       if (data) setSpends(data);
+
       setLoading(false);
     };
 

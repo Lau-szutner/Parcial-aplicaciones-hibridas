@@ -32,8 +32,8 @@ const loginValidationSchema = yup.object({
     .required('La contraseña es obligatoria'),
 });
 
-const RegisterForm = ({ setEmail, setToken }) => {
-  const [isLogin, setIsLogin] = useState(true); // Estado para determinar si es login o registro
+const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
+  const [isLogin, setIsLogin] = useState(initialMode === 'login'); // Estado para determinar si es login o registro
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {
@@ -145,7 +145,7 @@ const RegisterForm = ({ setEmail, setToken }) => {
           <button
             type="button"
             onClick={() => setShowPassword((s) => !s)}
-            className="px-3 bg-gray-200 text-gray-700 rounded-r-lg border border-l-0 hover:bg-gray-300 flex items-center justify-center"
+            className="px-3 bg-gray-200 text-gray-700 rounded-r-lg hover:bg-gray-300 flex items-center justify-center"
             aria-label={
               showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
             }
@@ -208,7 +208,7 @@ const RegisterForm = ({ setEmail, setToken }) => {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((s) => !s)}
-              className="px-3 bg-gray-200 text-gray-700 rounded-r-lg border border-l-0 hover:bg-gray-300 flex items-center justify-center"
+              className="px-3 bg-gray-200 text-gray-700 rounded-r-lg  hover:bg-gray-300 flex items-center justify-center"
               aria-label={
                 showConfirmPassword
                   ? 'Ocultar confirmación'

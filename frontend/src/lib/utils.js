@@ -26,7 +26,7 @@ const fetchAllSpends = async () => {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.message || 'Error al obtener los gastos');
+      throw new Error(result.message || 'No se encontraron gastos');
     }
     // console.log(result.data);
     return { data: result, error: null };

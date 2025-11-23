@@ -36,7 +36,7 @@ export async function getAllspendsByEmail(email) {
   const spends = await Spend.find({ email });
 
   if (!spends.length) {
-    throw new Error('No se encontraron gastos');
+    throw new Error('no se encontraron gastos');
   }
 
   return spends;

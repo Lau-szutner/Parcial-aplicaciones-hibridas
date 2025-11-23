@@ -4,7 +4,7 @@ const LoginAdmin = () => {
       // onSubmit={handleSubmit(isLogin ? handleLogin : handleRegister)}
       className="bg-stone-700 p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6  text-white w-full"
     >
-      <h2 className="text-2xl font-semibold">Iniciar Sesión</h2>
+      <h2 className="text-2xl font-semibold">Iniciar Sesión - Back office</h2>
       <div className="space-y-2">
         <label htmlFor="email" className="block text-sm font-medium text-white">
           Correo Electrónico

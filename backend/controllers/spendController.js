@@ -19,6 +19,7 @@ export const getSpendsByEmail = async (req, res) => {
   try {
     const { email } = req.user;
     await validateEmail(email);
+
     const spends = await getAllspendsByEmail(email);
 
     res.status(200).json(spends);
