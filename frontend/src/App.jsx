@@ -69,31 +69,12 @@ function App() {
           </section>
         ) : (
           <>
-            {/* Sidebar */}
-            {!isErrorPage && (
-              <aside className="w-64 bg-stone-900 flex flex-col items-center justify-start  py-8 px-4">
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold mb-2">Spend Tracker</h1>
-                  <p>
-                    Bienvenido/a, <span className="font-bold">{email}</span>
-                  </p>
-                </div>
-
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </aside>
-            )}
-
             {/* Contenido dinámico */}
             <section className="flex-grow overflow-auto p-6">
               <Routes>
-                <Route path="/" element={<Home email={email} />} />
+                <Route path="/gastos" element={<Home email={email} />} />
                 <Route path="/graficos" element={<Graficos />} />
-                <Route path="/GastosCompartidos" element={<SharedSpends />} />
+                <Route path="/gastosCompartidos" element={<SharedSpends />} />
                 <Route path="/backOffice" element={<BackOffice />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

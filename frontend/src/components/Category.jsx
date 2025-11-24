@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getTokenFromCookies } from '../lib/utils';
 
-const Category = () => {
+const Category = ({ categorySelected }) => {
   const [newCategoryName, setNewCategoryName] = useState('');
   const [message, setMessage] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -74,7 +74,10 @@ const Category = () => {
     }
   };
 
-  const handleCategoryClick = (category) => setSelectedCategory(category);
+  function handleCategoryClick(category) {
+    setSelectedCategory(category);
+    categorySelected(category);
+  }
 
   const fetchCategories = async () => {
     const token = getTokenFromCookies();

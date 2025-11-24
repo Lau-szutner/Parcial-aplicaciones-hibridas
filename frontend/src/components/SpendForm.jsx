@@ -7,7 +7,7 @@ const SpendForm = ({ email, onSubmit }) => {
   const [amount, setAmount] = useState('1200');
   const [description, setDescription] = useState('Viaje al trabajo');
   const [sharedWith, setSharedWith] = useState('');
-  const [category, setCategory] = useState('Viajes');
+  const [category, setCategory] = useState('');
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +37,11 @@ const SpendForm = ({ email, onSubmit }) => {
     setDescription('');
     setSharedWith('');
   };
+
+  function showMessage(message) {
+    setCategory(message);
+    console.log(message);
+  }
 
   return (
     <form
@@ -90,8 +95,9 @@ const SpendForm = ({ email, onSubmit }) => {
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
+
       <div>
-        <Category />
+        <Category categorySelected={showMessage} />
       </div>
 
       <div className="space-y-2 mt-4">

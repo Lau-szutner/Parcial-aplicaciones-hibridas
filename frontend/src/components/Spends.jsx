@@ -16,7 +16,7 @@ const Spends = () => {
     const loadSpends = async () => {
       setLoading(true);
       const { data, error } = await fetchAllSpends();
-      console.log(error);
+
       if (error) setError(error);
       if (data) setSpends(data);
 
@@ -59,7 +59,7 @@ const Spends = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-5 place-items-center">
       {spends.map((spend) => (
         <Spend
           key={spend._id}

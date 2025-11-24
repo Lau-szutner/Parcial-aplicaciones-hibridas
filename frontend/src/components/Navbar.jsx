@@ -1,12 +1,14 @@
 import perfil from '../assets/perfil.jpg';
 import { getTokenFromCookies } from '../lib/utils';
+import { useLocation } from 'react-router-dom';
 
 const Navbar = ({ userEmail }) => {
   const token = getTokenFromCookies();
+  const location = useLocation();
 
   return (
     <header className="w-full bg-green-700 shadow-lg z-50">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+      <nav className="mx-auto flex justify-between py-3 px-10">
         {/* Logo y título */}
         <div className="flex items-center gap-4">
           <div className="flex flex-col leading-tight">
@@ -20,12 +22,16 @@ const Navbar = ({ userEmail }) => {
         </div>
 
         {/* Navegación */}
-        {token.data && (
+        {token && (
           <ul className="flex items-center gap-6">
             <li>
               <a
-                href="/"
-                className="text-white font-medium hover:text-blue-300 transition-colors duration-200"
+                href="/gastos"
+                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
+                  location.pathname == '/gastos'
+                    ? 'bg-green-500'
+                    : 'bg-green-900'
+                }`}
               >
                 Gastos
               </a>
@@ -33,15 +39,23 @@ const Navbar = ({ userEmail }) => {
             <li>
               <a
                 href="/graficos"
-                className="text-white font-medium hover:text-blue-300 transition-colors duration-200"
+                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600  ${
+                  location.pathname == '/graficos'
+                    ? 'bg-green-500'
+                    : 'bg-green-900'
+                }`}
               >
                 Gráficos
               </a>
             </li>
             <li>
               <a
-                href="/GastosCompartidos"
-                className="text-white font-medium hover:text-blue-300 transition-colors duration-200"
+                href="/gastosCompartidos"
+                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
+                  location.pathname == '/gastosCompartidos'
+                    ? 'bg-green-500'
+                    : 'bg-green-900'
+                }`}
               >
                 Gastos compartidos
               </a>
