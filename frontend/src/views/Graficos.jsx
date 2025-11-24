@@ -14,7 +14,12 @@ function Graficos() {
     setSelectedMonth(value);
 
     try {
-      const totals = await getSpendsByMonth(year, month);
+      const spendsByMonthData = await getSpendsByMonth(year, month);
+
+      const totals = spendsByMonthData.reduce((acc, spend) => {
+        acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
+        return acc;
+      }, {});
 
       if (!totals) {
         setError('No se encontraron datos para este mes.');

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import SpendForm from '../components/SpendForm.jsx';
 import Spends from '../components/Spends.jsx';
-
+import { getSpendsByMonth } from '../lib/utils';
 const Home = ({ email }) => {
   const [newSpendForm, setNewSpendForm] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState('');
 
   const toggleFormVisibility = () => {
     setNewSpendForm((prev) => !prev);
@@ -11,6 +12,31 @@ const Home = ({ email }) => {
 
   const handleFormSubmit = (data) => {
     console.log('Datos enviados:', data);
+  };
+
+  const handleMonthChange = async (e) => {
+    const value = e.target.value;
+    const [year, month] = value.split('-');
+    setSelectedMonth(value);
+
+    try {
+      const totals = await getSpendsByMonth(year, month);
+
+      if (!totals) {
+        console.log('No se encontraron datos para este mes.');
+        // setTotalByCategory({});
+        // Cookies.remove('spendData');
+        return;
+      }
+
+      console.log(totals);
+      // setError(null);
+      // setTotalByCategory(totals);
+      // Cookies.set('spendData', JSON.stringify(totals), { expires: 7 });
+    } catch (err) {
+      console.error('Error al obtener los gastos:', err);
+      setError('Ocurrió un error al cargar los datos.');
+    }
   };
 
   return (
@@ -29,8 +55,8 @@ const Home = ({ email }) => {
               <label className="text-white mr-4">Elegir mes y año:</label>
               <input
                 type="month"
-                // value={selectedMonth}
-                // onChange={handleMonthChange}
+                value={selectedMonth}
+                onChange={handleMonthChange}
                 className="bg-neutral-700 text-white px-4 py-2 rounded-lg cursor-pointer"
               />
             </div>

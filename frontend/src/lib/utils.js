@@ -139,12 +139,7 @@ const getSpendsByMonth = async (year, month) => {
 
     const spendsByMonthData = await response.json();
 
-    const totals = spendsByMonthData.reduce((acc, spend) => {
-      acc[spend.category] = (acc[spend.category] || 0) + spend.amount;
-      return acc;
-    }, {});
-
-    return totals;
+    return spendsByMonthData;
   } catch (error) {
     console.log(error);
   }
