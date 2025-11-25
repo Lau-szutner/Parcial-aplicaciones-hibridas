@@ -1,6 +1,4 @@
-import React from 'react';
-
-const AuthLanding = ({ onChoose }) => {
+const Welcome = ({ onChoose }) => {
   return (
     <div className="max-w-md text-center bg-stone-700 p-8 rounded-lg shadow">
       <h1 className="text-3xl font-bold mb-4">Bienvenido a Spend Tracker</h1>
@@ -27,4 +25,4 @@ const AuthLanding = ({ onChoose }) => {
   );
 };
 
-export default AuthLanding;
+export default Welcome;

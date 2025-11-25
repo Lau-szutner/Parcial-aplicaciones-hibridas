@@ -3,7 +3,7 @@ import Navbar from './components/Navbar.jsx';
 import Home from './views/Home.jsx';
 import SharedSpends from './views/SharedSpends.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
-import AuthLanding from './components/AuthLanding.jsx';
+import Welcome from './components/Welcome.jsx';
 import BackOffice from './views/BackOffice.jsx';
 import NotFound from './views/NotFound';
 import Graficos from './views/Graficos.jsx';
@@ -18,23 +18,16 @@ function App() {
   const isErrorPage = location.pathname === '/404';
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState('');
-  const [showAuthForm, setShowAuthForm] = useState(false);
-  const [authMode, setAuthMode] = useState('register'); // 'login' | 'register'
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [authMode, setAuthMode] = useState('register');
 
   useEffect(() => {
     const storedToken = getTokenFromCookies();
     const storedEmail = Cookies.get('email');
-    if (storedToken) setToken(storedToken);
+
+    if (storedToken) setToken(storedToken.data);
     if (storedEmail) setEmail(storedEmail);
   }, []);
-
-  const handleLogout = () => {
-    Cookies.remove('token');
-    Cookies.remove('email');
-    setToken(null);
-    setEmail('');
-    setShowAuthForm(false);
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-stone-800 text-white">
@@ -42,20 +35,20 @@ function App() {
       <Navbar userEmail={email} />
       {/* Contenido principal */}
       <main className="flex-grow flex">
-        {!token ? (
+        {token === null ? (
           <section className="flex flex-col items-center justify-center flex-grow p-6">
-            {!showAuthForm ? (
-              <AuthLanding
+            {!showWelcome ? (
+              <Welcome
                 onChoose={(mode) => {
                   setAuthMode(mode);
-                  setShowAuthForm(true);
+                  setShowWelcome(true);
                 }}
               />
             ) : (
               <div className="w-full max-w-xl">
                 <button
-                  className="mb-4 text-sm text-gray-300"
-                  onClick={() => setShowAuthForm(false)}
+                  className="mb-4 text-sm text-gray-300 cursor-pointer"
+                  onClick={() => setShowWelcome(false)}
                 >
                   {'< Volver'}
                 </button>

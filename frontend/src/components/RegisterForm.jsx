@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 // Validación de formulario con Yup
 const registerValidationSchema = yup.object({
@@ -33,9 +34,10 @@ const loginValidationSchema = yup.object({
 });
 
 const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
-  const [isLogin, setIsLogin] = useState(initialMode === 'login'); // Estado para determinar si es login o registro
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -58,12 +60,13 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
         'http://127.0.0.1:3000/auth/register',
         data
       );
-      Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
-      Cookies.set('email', data.email, { expires: 7 }); // Guardamos el email en cookies
+      Cookies.set('token', response.data.token, { expires: 7 });
+      Cookies.set('email', data.email, { expires: 7 });
       console.log('Registro exitoso, token y email almacenados en cookies');
 
       setEmail(data.email);
-      setToken(response.data.token); // 👈 ahora sí
+      setToken(response.data.token);
+      navigate('/gastos');
     } catch (error) {
       console.error('Error en el registro:', error);
       setError('email', {
@@ -79,11 +82,12 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
         'http://127.0.0.1:3000/auth/login',
         data
       );
-      Cookies.set('token', response.data.token, { expires: 7 }); // Guardamos el token en cookies
-      Cookies.set('email', data.email, { expires: 7 }); // Guardamos el email en cookies
+      Cookies.set('token', response.data.token, { expires: 7 });
+      Cookies.set('email', data.email, { expires: 7 });
       console.log('Login exitoso, token y email almacenados en cookies');
       setEmail(data.email);
-      setToken(response.data.token); // 👈 ahora sí
+      setToken(response.data.token);
+      navigate('/gastos');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       setError('email', {
@@ -93,7 +97,6 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
     }
   };
 
-  // Cambiar entre login y registro
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };

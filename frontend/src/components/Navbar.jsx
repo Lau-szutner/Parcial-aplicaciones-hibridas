@@ -1,10 +1,18 @@
-import perfil from '../assets/perfil.jpg';
 import { getTokenFromCookies } from '../lib/utils';
 import { useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Navbar = ({ userEmail }) => {
-  const token = getTokenFromCookies();
+  let token = getTokenFromCookies();
   const location = useLocation();
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    Cookies.remove('email');
+    // setToken(null);
+    // setEmail('');
+    // setShowAuthForm(false);
+  };
 
   return (
     <header className="w-full bg-green-700 shadow-lg z-50">
@@ -22,8 +30,8 @@ const Navbar = ({ userEmail }) => {
         </div>
 
         {/* Navegación */}
-        {token && (
-          <ul className="flex items-center gap-6">
+        {token.data === undefined && (
+          <ul className="flex items-center gap-6 w-fit">
             <li>
               <a
                 href="/gastos"
@@ -60,6 +68,14 @@ const Navbar = ({ userEmail }) => {
                 Gastos compartidos
               </a>
             </li>
+
+            <button
+              onClick={() => handleLogout()}
+              className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer
+              }`}
+            >
+              Logout
+            </button>
           </ul>
         )}
       </nav>
