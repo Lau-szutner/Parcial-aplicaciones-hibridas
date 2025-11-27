@@ -2,9 +2,12 @@ import { useState } from 'react';
 import SpendForm from '../components/SpendForm.jsx';
 import Spends from '../components/Spends.jsx';
 import { getSpendsByMonth } from '../lib/utils';
+
 const Home = ({ email }) => {
   const [newSpendForm, setNewSpendForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [spendsByMonth, setSpendsByMonth] = useState([]);
+  const [error, setError] = useState(null);
 
   const toggleFormVisibility = () => {
     setNewSpendForm((prev) => !prev);
@@ -17,22 +20,21 @@ const Home = ({ email }) => {
   const handleMonthChange = async (e) => {
     const value = e.target.value;
     const [year, month] = value.split('-');
+
     setSelectedMonth(value);
 
     try {
-      const totals = await getSpendsByMonth(year, month);
+      const spendsByMonthData = await getSpendsByMonth(year, month);
 
-      if (!totals) {
+      if (!spendsByMonthData) {
         console.log('No se encontraron datos para este mes.');
-        // setTotalByCategory({});
-        // Cookies.remove('spendData');
         return;
       }
 
-      console.log(totals);
-      // setError(null);
-      // setTotalByCategory(totals);
-      // Cookies.set('spendData', JSON.stringify(totals), { expires: 7 });
+      console.log('DATA:', spendsByMonthData);
+      setSpendsByMonth(spendsByMonthData);
+
+      setError(null);
     } catch (err) {
       console.error('Error al obtener los gastos:', err);
       setError('Ocurrió un error al cargar los datos.');
@@ -63,6 +65,8 @@ const Home = ({ email }) => {
           )}
         </div>
 
+        {error && <p className="text-red-500 ml-6">{error}</p>}
+
         {newSpendForm ? (
           <section className="mt-5">
             <h2 className="text-xl font-semibold mb-4 text-center text-white">
@@ -71,7 +75,7 @@ const Home = ({ email }) => {
             <SpendForm email={email} onSubmit={handleFormSubmit} />
           </section>
         ) : (
-          <Spends />
+          <Spends spendsData={spendsByMonth} />
         )}
       </div>
     </main>

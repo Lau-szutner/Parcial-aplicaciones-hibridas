@@ -9,13 +9,13 @@ const Welcome = ({ onChoose }) => {
 
       <div className="flex gap-4 justify-center">
         <button
-          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded"
+          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded cursor-pointer"
           onClick={() => onChoose('register')}
         >
           Crear cuenta
         </button>
         <button
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded"
+          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded cursor-pointer"
           onClick={() => onChoose('login')}
         >
           Iniciar sesión

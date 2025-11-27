@@ -1,52 +1,42 @@
 // components/Spends.jsx
 import Spend from './Spend.jsx';
 import { useEffect, useState } from 'react';
-import {
-  fetchAllSpends,
-  deleteSpendById,
-  editSpendById,
-} from '../lib/utils.js';
+import { deleteSpendById, editSpendById } from '../lib/utils.js';
 
-const Spends = () => {
-  const [spends, setSpends] = useState([]);
+const Spends = ({ spendsData }) => {
+  const [spends, setSpends] = useState([]); // ✅ Inicializar como array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadSpends = async () => {
-      setLoading(true);
-      const { data, error } = await fetchAllSpends();
+    setLoading(true);
 
-      if (error) setError(error);
-      if (data) setSpends(data);
+    // ✅ Siempre aseguramos que sea array (vacío si no lo es)
+    setSpends(Array.isArray(spendsData) ? spendsData : []);
 
-      setLoading(false);
-    };
+    setLoading(false);
+  }, [spendsData]);
 
-    loadSpends();
-  }, []);
+  // ❌ Antes se rompía cuando spends era undefined
+  // Ahora siempre es array, por lo que map() es seguro
 
   async function handleDelete(id) {
-    const { success, message, error } = await deleteSpendById(id);
+    const { success, error } = await deleteSpendById(id);
 
     if (success) {
-      console.log(message);
+      // ✅ Elimina correctamente del estado
       setSpends((prev) => prev.filter((s) => s._id !== id));
     } else {
-      console.error(error);
       setError(error);
     }
   }
 
   async function handleEditSpend(id, updatedSpendData) {
-    const { success, message, updatedSpend } = await editSpendById(
-      id,
-      updatedSpendData
-    );
+    const { success, message } = await editSpendById(id, updatedSpendData);
 
     if (success) {
-      setSpends(
-        spends.map((spend) =>
+      setSpends((prev) =>
+        prev.map((spend) =>
           spend._id === id ? { ...spend, ...updatedSpendData } : spend
         )
       );
@@ -77,7 +67,7 @@ const Spends = () => {
             hour12: false,
           })}
           onDelete={() => handleDelete(spend._id)}
-          onEdit={(updatedSpend) => handleEditSpend(spend._id, updatedSpend)} // Envía los datos editados
+          onEdit={(updatedSpend) => handleEditSpend(spend._id, updatedSpend)}
         />
       ))}
     </div>

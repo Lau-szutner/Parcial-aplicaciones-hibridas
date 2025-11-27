@@ -148,7 +148,7 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
           <button
             type="button"
             onClick={() => setShowPassword((s) => !s)}
-            className="px-3 bg-gray-200 text-gray-700 rounded-r-lg hover:bg-gray-300 flex items-center justify-center"
+            className="px-3 bg-gray-200 text-gray-700 rounded-r-lg hover:bg-gray-300 flex items-center justify-center cursor-pointer"
             aria-label={
               showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
             }
@@ -211,7 +211,7 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((s) => !s)}
-              className="px-3 bg-gray-200 text-gray-700 rounded-r-lg  hover:bg-gray-300 flex items-center justify-center"
+              className="px-3 bg-gray-200 text-gray-700 rounded-r-lg  hover:bg-gray-300 flex items-center justify-center cursor-pointer"
               aria-label={
                 showConfirmPassword
                   ? 'Ocultar confirmación'

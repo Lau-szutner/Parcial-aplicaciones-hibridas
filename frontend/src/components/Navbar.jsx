@@ -1,14 +1,17 @@
 import { getTokenFromCookies } from '../lib/utils';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Navbar = ({ userEmail }) => {
   let token = getTokenFromCookies();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('email');
+    Cookies.remove('spendData');
+    // navigate('/gastos');
     // setToken(null);
     // setEmail('');
     // setShowAuthForm(false);

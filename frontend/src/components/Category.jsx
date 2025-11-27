@@ -9,7 +9,8 @@ const Category = ({ categorySelected }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(true);
-
+  console.log(categories);
+  console.log(selectedCategory === categories[0]);
   const BASE_URL = 'http://127.0.0.1:3000';
 
   const handleNewCategoryNameChange = (e) => setNewCategoryName(e.target.value);

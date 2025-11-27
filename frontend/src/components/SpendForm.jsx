@@ -1,126 +1,154 @@
-import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { createSpend } from '../lib/utils';
 import Category from './Category';
 
+// Schema de validación con Yup
+const spendValidationSchema = yup.object({
+  title: yup
+    .string()
+    .required('El título es obligatorio')
+    .min(3, 'Debe tener al menos 3 caracteres'),
+
+  amount: yup
+    .number()
+    .typeError('El monto debe ser un número')
+    .positive('El monto debe ser mayor a 0')
+    .required('El monto es obligatorio'),
+
+  description: yup
+    .string()
+    .max(200, 'Máximo 200 caracteres')
+    .required('La descripción es obligatoria'),
+
+  category: yup.string().required('Debes seleccionar una categoría'),
+
+  email: yup
+    .string()
+    .email('Email inválido')
+    .required('Tu email es obligatorio'),
+
+  sharedWith: yup.string().email('Email inválido').nullable().notRequired(),
+});
+
 const SpendForm = ({ email, onSubmit }) => {
-  const [title, setTitle] = useState('Taxi al trabajo');
-  const [amount, setAmount] = useState('1200');
-  const [description, setDescription] = useState('Viaje al trabajo');
-  const [sharedWith, setSharedWith] = useState('');
-  const [category, setCategory] = useState('');
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(spendValidationSchema),
+    defaultValues: {
+      title: '',
+      amount: '',
+      description: '',
+      category: '',
+      sharedWith: '',
+      email: email || '',
+    },
+  });
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = {
-      title,
-      amount,
-      description,
-      category,
-      email,
-      sharedWith: sharedWith || null,
-    };
-
-    const { data, error } = await createSpend(formData);
+  const onSubmitForm = async (data) => {
+    const { data: result, error } = await createSpend(data);
 
     if (error) {
-      console.error('Error al crear el gasto:', error);
-      alert('Error al crear el gasto');
+      console.error('Error al crear gasto:', error);
       return;
     }
 
-    onSubmit && onSubmit(data);
-    alert('Gasto creado exitosamente');
+    onSubmit && onSubmit(result);
 
-    setTitle('');
-    setAmount('');
-    setDescription('');
-    setSharedWith('');
+    reset();
   };
 
-  function showMessage(message) {
-    setCategory(message);
-    console.log(message);
-  }
+  const handleCategorySelect = (value) => {
+    setValue('category', value);
+  };
 
   return (
     <form
-      onSubmit={handleFormSubmit}
-      className="bg-white p-6 rounded-lg shadow-lg max-w-xl mx-auto text-black"
+      onSubmit={handleSubmit(onSubmitForm)}
+      className="bg-white p-6 rounded-lg shadow-lg max-w-xl mx-auto text-black space-y-4"
     >
-      <h2 className="text-2xl font-semibold">Gastos</h2>
+      <h2 className="text-2xl font-semibold">Registrar Gasto</h2>
 
-      <div className="space-y-2">
-        <label
-          htmlFor="title"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Título
-        </label>
+      {/* Título */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">Título</label>
         <input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          {...register('title')}
+          className={`w-full p-3 border ${
+            errors.title ? 'border-red-500' : 'border-gray-300'
+          } rounded-lg`}
         />
+        {errors.title && (
+          <p className="text-sm text-red-500">{errors.title.message}</p>
+        )}
       </div>
 
-      <div className="space-y-2">
-        <label
-          htmlFor="amount"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Monto
-        </label>
+      {/* Monto */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">Monto</label>
         <input
-          id="amount"
           type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          {...register('amount')}
+          className={`w-full p-3 border ${
+            errors.amount ? 'border-red-500' : 'border-gray-300'
+          } rounded-lg`}
         />
+        {errors.amount && (
+          <p className="text-sm text-red-500">{errors.amount.message}</p>
+        )}
       </div>
 
-      <div className="space-y-2">
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Descripción
-        </label>
+      {/* Descripción */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">Descripción</label>
         <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+          {...register('description')}
+          className={`w-full p-3 border ${
+            errors.description ? 'border-red-500' : 'border-gray-300'
+          } rounded-lg`}
+        ></textarea>
+        {errors.description && (
+          <p className="text-sm text-red-500">{errors.description.message}</p>
+        )}
       </div>
 
-      <div>
-        <Category categorySelected={showMessage} />
+      {/* Categoría */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">Categoría</label>
+        <Category categorySelected={handleCategorySelect} />
+        {errors.category && (
+          <p className="text-sm text-red-500">{errors.category.message}</p>
+        )}
       </div>
 
-      <div className="space-y-2 mt-4">
-        <label
-          htmlFor="sharedWith"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Correo del usuario compartido (opcional)
+      {/* Compartir con */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">
+          Compartir con (email, opcional)
         </label>
         <input
-          id="sharedWith"
-          type="email"
-          value={sharedWith}
-          onChange={(e) => setSharedWith(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          {...register('sharedWith')}
+          className={`w-full p-3 border ${
+            errors.sharedWith ? 'border-red-500' : 'border-gray-300'
+          } rounded-lg`}
         />
+        {errors.sharedWith && (
+          <p className="text-sm text-red-500">{errors.sharedWith.message}</p>
+        )}
       </div>
 
+      {/* Botón */}
       <button
         type="submit"
-        className="w-full py-3 my-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-500"
       >
-        Cargar
+        Cargar Gasto
       </button>
     </form>
   );
