@@ -142,3 +142,14 @@ export const getSharedSpendsWithMe = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
+
+export const getAllSpends = async (req, res) => {
+  try {
+    const spends = await Spend.find();
+
+    res.status(200).json(spends);
+  } catch (error) {
+    console.error('Error al obtener todos los gastos:', error);
+    res.status(500).json({ message: 'Error al obtener todos los gastos' });
+  }
+};

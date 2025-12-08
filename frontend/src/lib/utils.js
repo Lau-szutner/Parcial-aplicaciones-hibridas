@@ -278,6 +278,31 @@ const isAdminUser = async () => {
   }
 };
 
+const getAllSpends = async () => {
+  const token = getTokenFromCookies();
+
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/spend/getAllSpends`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const result = await response.json();
+      throw new Error(result.message || 'No se pudieron obtener los gastos');
+    }
+
+    const data = await response.json();
+    return data; // mismo formato que tus otras funciones
+  } catch (error) {
+    console.warn(error);
+    throw error;
+  }
+};
+
 export {
   createSpend,
   getTokenFromCookies,
@@ -290,4 +315,5 @@ export {
   getAllUsers,
   deleteUser,
   isAdminUser,
+  getAllSpends,
 };

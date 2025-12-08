@@ -6,20 +6,19 @@ import { isAdminUser } from '../lib/utils';
 const backOffice = () => {
   const [isAdmin, setIsAdmin] = useState(true);
 
-  useEffect(() => {
-    const userAdmin = async () => {
-      try {
-        const data = await isAdminUser();
-        console.log(data);
-      } catch (error) {}
-    };
+  // useEffect(() => {
+  //   const userAdmin = async () => {
+  //     try {
+  //       const data = await isAdminUser();
+  //       console.log(data);
+  //     } catch (error) {}
+  //   };
 
-    userAdmin();
-  }, []);
+  //   userAdmin();
+  // }, []);
 
   return (
     <div>
-      <h1>BACK OFFICE</h1>
       {isAdmin == true ? <TotalUsers></TotalUsers> : <LoginAdmin></LoginAdmin>}
     </div>
   );

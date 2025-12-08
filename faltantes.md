@@ -1,0 +1,5 @@
+- Bug en color de crear categoria por primera vez []
+- Retroalimentacion cuando se creo un gasto []
+- revisar sharedSpends []
+- guardas ultima busqueda de gastos en cookies []
+- hacer refresh cuando hago logout []

@@ -8,6 +8,7 @@ import {
   getSpendsByMonth,
   getSharedSpends,
   getSharedSpendsWithMe,
+  getAllSpends,
 } from '../controllers/spendController.js';
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router.get('/getSpendsByMonth', protect, getSpendsByMonth);
 router.get('/getSharedSpends', protect, getSharedSpends);
 
 router.get('/getSharedSpendsWithMe', protect, getSharedSpendsWithMe);
+
+router.get('/getAllSpends', protect, getAllSpends);
 
 router.post('/', protect, createSpend);
 
