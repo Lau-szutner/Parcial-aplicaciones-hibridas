@@ -1,27 +1,47 @@
 import TotalUsers from '../components/backoffice/TotalUsers';
 import LoginAdmin from '../components/backoffice/LoginAdmin';
-import { useState, useEffect } from 'react';
-import { isAdminUser } from '../lib/utils';
+import { useState } from 'react';
 
-const backOffice = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
+const BackOffice = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // useEffect(() => {
-  //   const userAdmin = async () => {
-  //     try {
-  //       const data = await isAdminUser();
-  //       console.log(data);
-  //     } catch (error) {}
-  //   };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  //   userAdmin();
-  // }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const res = await fetch('http://localhost:3000/auth/backOffice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    setIsAdmin(true);
+  };
 
   return (
-    <div>
-      {isAdmin == true ? <TotalUsers></TotalUsers> : <LoginAdmin></LoginAdmin>}
-    </div>
+    <>
+      {isAdmin ? (
+        <TotalUsers />
+      ) : (
+        <LoginAdmin
+          email={email}
+          password={password}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />
+      )}
+    </>
   );
 };
 
-export default backOffice;
+export default BackOffice;

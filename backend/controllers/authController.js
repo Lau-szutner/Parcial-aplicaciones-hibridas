@@ -53,10 +53,21 @@ export const loginAdminUser = async (req, res) => {
 
   try {
     const user = await findUser(email);
+
+    // 1. Verificación de rol admin
+    if (!user.admin) {
+      return res
+        .status(403)
+        .json({ message: 'No tienes permisos de administrador' });
+    }
+
+    // 2. Verificación de contraseña
     await comparePassword(password, user.password);
 
+    // 3. Token
     const token = await createTokenUser(user);
-    res.status(200).json({ token });
+
+    res.status(200).json({ token, isAdmin: true });
   } catch (error) {
     if (error.message.includes('Credenciales incorrectas')) {
       return res.status(401).json({ message: error.message });

@@ -14,13 +14,16 @@ import cors from 'cors';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // <- CORREGIDO
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173', // desarrollo
+      'https://TU_FRONTEND_URL', // producción
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -53,7 +56,7 @@ app.get('/register', (req, res) => {
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log('Conexión con MongoDB exitosa'))
+  .then(() => console.log('Conexión con MongoDB Atlas exitosa'))
   .catch((err) => console.log('Error en la conexión', err));
 
 app.use((err, req, res, next) => {

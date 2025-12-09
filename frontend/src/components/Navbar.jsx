@@ -35,47 +35,51 @@ const Navbar = ({ userEmail }) => {
         {/* Navegación */}
         {token.data === undefined && (
           <ul className="flex items-center gap-6 w-fit">
-            <li>
-              <a
-                href="/gastos"
-                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
-                  location.pathname == '/gastos'
-                    ? 'bg-green-500'
-                    : 'bg-green-900'
-                }`}
-              >
-                Gastos
-              </a>
-            </li>
-            <li>
-              <a
-                href="/graficos"
-                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600  ${
-                  location.pathname == '/graficos'
-                    ? 'bg-green-500'
-                    : 'bg-green-900'
-                }`}
-              >
-                Gráficos
-              </a>
-            </li>
-            <li>
-              <a
-                href="/gastosCompartidos"
-                className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
-                  location.pathname == '/gastosCompartidos'
-                    ? 'bg-green-500'
-                    : 'bg-green-900'
-                }`}
-              >
-                Gastos compartidos
-              </a>
-            </li>
+            {location.pathname !== '/backOffice' && (
+              <>
+                <li>
+                  <a
+                    href="/gastos"
+                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
+                      location.pathname == '/gastos'
+                        ? 'bg-green-500'
+                        : 'bg-green-900'
+                    }`}
+                  >
+                    Gastos
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/graficos"
+                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600  ${
+                      location.pathname == '/graficos'
+                        ? 'bg-green-500'
+                        : 'bg-green-900'
+                    }`}
+                  >
+                    Gráficos
+                  </a>
+                </li>
 
+                <li>
+                  <a
+                    href="/gastosCompartidos"
+                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
+                      location.pathname == '/gastosCompartidos'
+                        ? 'bg-green-500'
+                        : 'bg-green-900'
+                    }`}
+                  >
+                    Gastos compartidos
+                  </a>
+                </li>
+              </>
+            )}
             <button
               onClick={() => handleLogout()}
               className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer
-              }`}
+            }`}
             >
               Logout
             </button>
