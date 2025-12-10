@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173', // desarrollo
-      'https://TU_FRONTEND_URL', // producción
+      'https://spend-tracker-frontend-aqyd.onrender.com', // producción
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
