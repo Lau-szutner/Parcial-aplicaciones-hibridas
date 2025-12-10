@@ -7,18 +7,16 @@ const Category = ({ categorySelected }) => {
   const [message, setMessage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-
   const [isNewCategoryVisible, setIsNewCategoryVisible] = useState(true);
-  console.log(categories);
-  console.log(selectedCategory === categories[0]);
-  const BASE_URL = 'http://127.0.0.1:3000';
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleNewCategoryNameChange = (e) => setNewCategoryName(e.target.value);
 
   const handleCreateNewCategory = async () => {
     setMessage(null);
 
-    function changeMessageVisility() {
+    function clearMessage() {
       setTimeout(() => {
         setMessage(null);
       }, 5000);
@@ -29,8 +27,7 @@ const Category = ({ categorySelected }) => {
         type: 'error',
         text: 'El nombre de la categoría no puede estar vacío.',
       });
-
-      changeMessageVisility();
+      clearMessage();
       return;
     }
 
@@ -40,14 +37,13 @@ const Category = ({ categorySelected }) => {
         type: 'error',
         text: 'No se encontró un token de autenticación.',
       });
-
-      changeMessageVisility();
+      clearMessage();
       return;
     }
 
     try {
       await axios.post(
-        `${BASE_URL}/category/newCategory`,
+        `${API_URL}/category/newCategory`,
         { name: newCategoryName },
         {
           headers: {
@@ -61,9 +57,11 @@ const Category = ({ categorySelected }) => {
         type: 'success',
         text: `Categoría "${newCategoryName}" creada con éxito.`,
       });
-      changeMessageVisility();
+      clearMessage();
+
       setNewCategoryName('');
       setIsNewCategoryVisible(false);
+
       await fetchCategories();
       setSelectedCategory(newCategoryName);
     } catch (err) {
@@ -75,27 +73,32 @@ const Category = ({ categorySelected }) => {
     }
   };
 
-  function handleCategoryClick(category) {
+  const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     categorySelected(category);
-  }
+  };
 
   const fetchCategories = async () => {
     const token = getTokenFromCookies();
     if (!token) return;
 
     try {
-      const res = await fetch(`${BASE_URL}/category/`, {
+      const res = await fetch(`${API_URL}/category/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
+
       const data = await res.json();
       const names = Array.isArray(data) ? data.map((c) => c.name) : [];
+
       setCategories(names);
-      if (!selectedCategory && names.length > 0) setSelectedCategory(names[0]);
+
+      if (!selectedCategory && names.length > 0) {
+        setSelectedCategory(names[0]);
+      }
     } catch (err) {
       console.error('Error fetching categories:', err);
     }
@@ -121,6 +124,7 @@ const Category = ({ categorySelected }) => {
             <p className="m-0">{category}</p>
           </div>
         ))}
+
         {!isNewCategoryVisible && (
           <button
             type="button"
@@ -167,6 +171,7 @@ const Category = ({ categorySelected }) => {
           </button>
         </div>
       )}
+
       {message && (
         <div
           className={`mt-2 p-2 rounded ${
