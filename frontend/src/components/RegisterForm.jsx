@@ -38,6 +38,7 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -54,15 +55,14 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
     },
   });
 
+  // Usamos la variable de entorno
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleRegister = async (data) => {
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:3000/auth/register',
-        data
-      );
+      const response = await axios.post(`${API_URL}/auth/register`, data);
       Cookies.set('token', response.data.token, { expires: 7 });
       Cookies.set('email', data.email, { expires: 7 });
-      console.log('Registro exitoso, token y email almacenados en cookies');
 
       setEmail(data.email);
       setToken(response.data.token);
@@ -78,13 +78,10 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
 
   const handleLogin = async (data) => {
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:3000/auth/login',
-        data
-      );
+      const response = await axios.post(`${API_URL}/auth/login`, data);
       Cookies.set('token', response.data.token, { expires: 7 });
       Cookies.set('email', data.email, { expires: 7 });
-      console.log('Login exitoso, token y email almacenados en cookies');
+
       setEmail(data.email);
       setToken(response.data.token);
       navigate('/gastos');
@@ -104,7 +101,7 @@ const RegisterForm = ({ setEmail, setToken, initialMode = 'login' }) => {
   return (
     <form
       onSubmit={handleSubmit(isLogin ? handleLogin : handleRegister)}
-      className="bg-stone-700 p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6  text-white w-full"
+      className="bg-stone-700 p-6 rounded-lg shadow-lg max-w-xl mx-auto space-y-6 text-white w-full"
     >
       <h2 className="text-2xl font-semibold">
         {isLogin ? 'Iniciar Sesión' : 'Registro de Usuario'}

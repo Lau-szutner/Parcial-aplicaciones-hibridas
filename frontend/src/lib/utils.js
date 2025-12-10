@@ -1,4 +1,6 @@
-// utils.js
+const API_URL = import.meta.env.VITE_API_URL;
+
+// === TOKEN ===
 const getTokenFromCookies = () => {
   const token = document.cookie
     .split('; ')
@@ -9,39 +11,37 @@ const getTokenFromCookies = () => {
     : { data: null, error: 'Token no encontrado en las cookies' };
 };
 
+// === GET SPENDS ===
 const fetchAllSpends = async () => {
   const token = getTokenFromCookies();
+
   try {
-    const response = await fetch(
-      'http://127.0.0.1:3000/spend/getSpendsByEmail',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/spend/getSpendsByEmail`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     const result = await response.json();
 
     if (!response.ok) {
       throw new Error(result.message || 'No se encontraron gastos');
     }
-    // console.log(result.data);
+
     return { data: result, error: null };
   } catch (error) {
     return { data: null, error: error.message };
   }
 };
 
+// === CREATE SPEND ===
 const createSpend = async (data) => {
   const token = getTokenFromCookies();
 
-  console.log(data);
-
   try {
-    const response = await fetch('http://127.0.0.1:3000/spend/', {
+    const response = await fetch(`${API_URL}/spend/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,11 +62,12 @@ const createSpend = async (data) => {
   }
 };
 
+// === DELETE SPEND ===
 const deleteSpendById = async (id) => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/spend/${id}`, {
+    const response = await fetch(`${API_URL}/spend/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -83,12 +84,13 @@ const deleteSpendById = async (id) => {
     return { success: false, error: error.message };
   }
 };
-// Manejo de edición de un gasto
+
+// === EDIT SPEND ===
 const editSpendById = async (id, updatedSpend) => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/spend/${id}`, {
+    const response = await fetch(`${API_URL}/spend/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -105,7 +107,7 @@ const editSpendById = async (id, updatedSpend) => {
 
     return {
       success: true,
-      message: `Gasto actualizado ${id},`,
+      message: `Gasto actualizado ${id}`,
       updatedSpend: updatedSpendData,
     };
   } catch (error) {
@@ -115,13 +117,13 @@ const editSpendById = async (id, updatedSpend) => {
   }
 };
 
+// === GET SPENDS BY MONTH ===
 const getSpendsByMonth = async (year, month) => {
   const token = getTokenFromCookies();
 
   try {
     const response = await fetch(
-      `http://127.0.0.1:3000/spend/getSpendsByMonth?year=${year}&month=${month}`,
-
+      `${API_URL}/spend/getSpendsByMonth?year=${year}&month=${month}`,
       {
         method: 'GET',
         headers: {
@@ -137,74 +139,66 @@ const getSpendsByMonth = async (year, month) => {
       );
     }
 
-    const spendsByMonthData = await response.json();
-
-    return spendsByMonthData;
+    return await response.json();
   } catch (error) {
     console.log(error);
   }
 };
 
+// === GET SHARED SPENDS ===
 const getSharedSpends = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(
-      `http://127.0.0.1:3000/spend/getSharedSpends`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/spend/getSharedSpends`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     if (!response.ok) {
-      throw new Error(`No se encontraron gastos para ese mes `);
+      throw new Error(`No se encontraron gastos compartidos`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
   }
 };
 
+// === GET SHARED WITH ME ===
 const fetchSharedSpendsWithMe = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(
-      `http://127.0.0.1:3000/spend/getSharedSpendsWithMe`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/spend/getSharedSpendsWithMe`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
-      throw new Error(`No se encontraron gastos que te compartan `);
+      throw new Error(`No se encontraron gastos compartidos contigo`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
   }
 };
 
+// === ADMIN: USERS ===
 const getAllUsers = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/backOffice/users`, {
+    const response = await fetch(`${API_URL}/backOffice/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -216,9 +210,7 @@ const getAllUsers = async () => {
       throw new Error(`No se encontraron usuarios`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
@@ -230,7 +222,7 @@ const deleteUser = async (id) => {
 
   try {
     const response = await fetch(
-      `http://127.0.0.1:3000/backOffice/users/deleteUser/${id}`,
+      `${API_URL}/backOffice/users/deleteUser/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -244,20 +236,19 @@ const deleteUser = async (id) => {
       throw new Error(`No se encontraron usuarios`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
   }
 };
 
+// === ADMIN CHECK ===
 const isAdminUser = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/auth/backOffice`, {
+    const response = await fetch(`${API_URL}/auth/backOffice`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -266,23 +257,22 @@ const isAdminUser = async () => {
     });
 
     if (!response.ok) {
-      throw new Error(`No hay credenciales validas`);
+      throw new Error(`No hay credenciales válidas`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
   }
 };
 
+// === GET ALL SPENDS (ADMIN) ===
 const getAllSpends = async () => {
   const token = getTokenFromCookies();
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/spend/getAllSpends`, {
+    const response = await fetch(`${API_URL}/spend/getAllSpends`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -295,8 +285,7 @@ const getAllSpends = async () => {
       throw new Error(result.message || 'No se pudieron obtener los gastos');
     }
 
-    const data = await response.json();
-    return data; // mismo formato que tus otras funciones
+    return await response.json();
   } catch (error) {
     console.warn(error);
     throw error;
