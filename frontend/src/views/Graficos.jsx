@@ -11,6 +11,7 @@ function Graficos() {
   const handleMonthChange = async (e) => {
     const value = e.target.value;
     const [year, month] = value.split('-');
+
     setSelectedMonth(value);
 
     try {
@@ -24,13 +25,13 @@ function Graficos() {
       if (!totals) {
         setError('No se encontraron datos para este mes.');
         setTotalByCategory({});
-        Cookies.remove('spendData');
+        Cookies.remove('chartData');
         return;
       }
 
       setError(null);
       setTotalByCategory(totals);
-      Cookies.set('spendData', JSON.stringify(totals), { expires: 7 });
+      Cookies.set('chartData', JSON.stringify(totals), { expires: 7 });
     } catch (err) {
       console.error('Error al obtener los gastos:', err);
       setError('Ocurrió un error al cargar los datos.');
@@ -38,7 +39,7 @@ function Graficos() {
   };
 
   useEffect(() => {
-    const savedData = Cookies.get('spendData');
+    const savedData = Cookies.get('chartData');
     if (savedData) {
       try {
         setTotalByCategory(JSON.parse(savedData));

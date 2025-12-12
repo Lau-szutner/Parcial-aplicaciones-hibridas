@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SpendForm from '../components/SpendForm.jsx';
 import Spends from '../components/Spends.jsx';
 import { getSpendsByMonth } from '../lib/utils';
+import Cookies from 'js-cookie';
 
 const Home = ({ email }) => {
   const [newSpendForm, setNewSpendForm] = useState(false);
@@ -20,26 +21,39 @@ const Home = ({ email }) => {
   const handleMonthChange = async (e) => {
     const value = e.target.value;
     const [year, month] = value.split('-');
-
     setSelectedMonth(value);
-
     try {
       const spendsByMonthData = await getSpendsByMonth(year, month);
-
       if (!spendsByMonthData) {
         console.log('No se encontraron datos para este mes.');
         return;
       }
-
-      console.log('DATA:', spendsByMonthData);
       setSpendsByMonth(spendsByMonthData);
-
+      saveSpendsCookies(spendsByMonthData, value);
       setError(null);
     } catch (err) {
       console.error('Error al obtener los gastos:', err);
       setError('Ocurrió un error al cargar los datos.');
     }
   };
+
+  function saveSpendsCookies(spends, month) {
+    Cookies.set('spendsSaved', JSON.stringify(spends), { expires: 7 });
+    Cookies.set('spendsMonth', JSON.stringify(month), { expires: 7 });
+  }
+
+  useEffect(() => {
+    const spendsSaved = Cookies.get('spendsSaved');
+    const spendsMonth = Cookies.get('spendsMonth');
+    if (spendsSaved) {
+      try {
+        setSpendsByMonth(JSON.parse(spendsSaved));
+        setSelectedMonth(JSON.parse(spendsMonth));
+      } catch {
+        console.warn('Error al parsear datos guardados');
+      }
+    }
+  }, []);
 
   return (
     <main className="">
@@ -51,7 +65,6 @@ const Home = ({ email }) => {
           >
             {newSpendForm ? 'Cerrar Formulario' : 'Nuevo Gasto'}
           </button>
-
           {!newSpendForm && (
             <div>
               <label className="text-white mr-4">Elegir mes y año:</label>
@@ -64,9 +77,7 @@ const Home = ({ email }) => {
             </div>
           )}
         </div>
-
         {error && <p className="text-red-500 ml-6">{error}</p>}
-
         {newSpendForm ? (
           <section className="mt-5">
             <h2 className="text-xl font-semibold mb-4 text-center text-white">
@@ -81,5 +92,4 @@ const Home = ({ email }) => {
     </main>
   );
 };
-
 export default Home;
