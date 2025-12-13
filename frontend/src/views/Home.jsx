@@ -79,8 +79,11 @@ const Home = ({ email }) => {
   }, []);
 
   return (
-    <main className="">
-      <div className="flex flex-col">
+    <main className="h-full p-10">
+      <div className="flex flex-col  mx-auto">
+        <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          Gastos
+        </h2>
         <div className="flex place-items-center">
           <button
             onClick={toggleFormVisibility}
