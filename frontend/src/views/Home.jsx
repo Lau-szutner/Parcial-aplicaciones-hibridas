@@ -14,18 +14,41 @@ const Home = ({ email }) => {
     setNewSpendForm((prev) => !prev);
   };
 
-  const handleFormSubmit = (data) => {
+  const handleSpendsChange = (updatedSpends) => {
+    setSpendsByMonth(updatedSpends);
+    saveSpendsCookies(updatedSpends, selectedMonth);
+  };
+
+  const handleFormSubmit = async (data) => {
     console.log('Datos enviados:', data);
+    // Refrescar los gastos después de añadir uno nuevo
+    if (selectedMonth) {
+      const [year, month] = selectedMonth.split('-');
+      try {
+        const spendsByMonthData = await getSpendsByMonth(year, month);
+        if (spendsByMonthData) {
+          setSpendsByMonth(spendsByMonthData);
+          saveSpendsCookies(spendsByMonthData, selectedMonth);
+        }
+      } catch (err) {
+        console.error('Error al refrescar gastos:', err);
+      }
+    }
   };
 
   const handleMonthChange = async (e) => {
     const value = e.target.value;
     const [year, month] = value.split('-');
     setSelectedMonth(value);
+
     try {
       const spendsByMonthData = await getSpendsByMonth(year, month);
       if (!spendsByMonthData) {
         console.log('No se encontraron datos para este mes.');
+        setError(' No hay gastos en el mes seleccionado');
+        Cookies.remove('spendsSaved');
+        Cookies.remove('spendsMonth');
+        setSpendsByMonth([]);
         return;
       }
       setSpendsByMonth(spendsByMonthData);
@@ -77,7 +100,8 @@ const Home = ({ email }) => {
             </div>
           )}
         </div>
-        {error && <p className="text-red-500 ml-6">{error}</p>}
+        {error && <p className="text-red-500 ml-6 text-lg">{error}</p>}
+
         {newSpendForm ? (
           <section className="mt-5">
             <h2 className="text-xl font-semibold mb-4 text-center text-white">
@@ -86,7 +110,10 @@ const Home = ({ email }) => {
             <SpendForm email={email} onSubmit={handleFormSubmit} />
           </section>
         ) : (
-          <Spends spendsData={spendsByMonth} />
+          <Spends
+            spendsData={spendsByMonth}
+            onSpendsChange={handleSpendsChange}
+          />
         )}
       </div>
     </main>

@@ -3,7 +3,7 @@ import Spend from './Spend.jsx';
 import { useEffect, useState } from 'react';
 import { deleteSpendById, editSpendById } from '../lib/utils.js';
 
-const Spends = ({ spendsData }) => {
+const Spends = ({ spendsData, onSpendsChange }) => {
   const [spends, setSpends] = useState([]); // ✅ Inicializar como array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +25,9 @@ const Spends = ({ spendsData }) => {
 
     if (success) {
       // ✅ Elimina correctamente del estado
-      setSpends((prev) => prev.filter((s) => s._id !== id));
+      const updatedSpends = spends.filter((s) => s._id !== id);
+      setSpends(updatedSpends);
+      onSpendsChange && onSpendsChange(updatedSpends);
     } else {
       setError(error);
     }
@@ -35,11 +37,11 @@ const Spends = ({ spendsData }) => {
     const { success, message } = await editSpendById(id, updatedSpendData);
 
     if (success) {
-      setSpends((prev) =>
-        prev.map((spend) =>
-          spend._id === id ? { ...spend, ...updatedSpendData } : spend
-        )
+      const updatedSpends = spends.map((spend) =>
+        spend._id === id ? { ...spend, ...updatedSpendData } : spend
       );
+      setSpends(updatedSpends);
+      onSpendsChange && onSpendsChange(updatedSpends);
     } else {
       console.log(message);
     }
