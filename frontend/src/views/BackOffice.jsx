@@ -29,6 +29,7 @@ const BackOffice = () => {
 
   return (
     <>
+      <h1>Prueba</h1>
       {isAdmin ? (
         <TotalUsers />
       ) : (

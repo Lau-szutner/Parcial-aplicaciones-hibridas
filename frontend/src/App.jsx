@@ -32,7 +32,14 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-stone-800 text-white">
       {/* Navbar */}
-      <Navbar userEmail={email} />
+      <Navbar
+        userEmail={email}
+        token={token}
+        setToken={setToken}
+        setShowWelcome={setShowWelcome}
+        setEmail={setEmail}
+      />
+
       {/* Contenido principal */}
       <main className="flex-grow flex">
         {token === null ? (
