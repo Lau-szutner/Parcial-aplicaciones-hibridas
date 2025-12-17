@@ -8,13 +8,19 @@ const Navbar = ({ userEmail }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    Cookies.remove('email');
-    Cookies.remove('spendData');
-    // navigate('/gastos');
-    // setToken(null);
+    // Obtener todas las cookies
+    const allCookies = Cookies.get(); // devuelve un objeto { cookieName: value, ... }
+
+    // Eliminar todas
+    Object.keys(allCookies).forEach((cookieName) => {
+      Cookies.remove(cookieName);
+    });
+
+    // Resetear estados
+    setToken(null);
     // setEmail('');
-    // setShowAuthForm(false);
+    setShowWelcome(false);
+    navigate('/');
   };
 
   return (
