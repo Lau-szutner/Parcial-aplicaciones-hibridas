@@ -1,42 +1,94 @@
-# Aplicaciones Híbridas Examen Parcial II
+# Aplicaciones Híbridas — Examen Parcial II
 
 ## Spend Tracker
 
-Spend Tracker es una aplicación full-stack hecha enteramente con MERN. El propósito de la misma es permitir que el usuario pueda crear anotaciones de los gastos realizados. El usuario puede **crear, leer, actualizar y eliminar** sus propios gastos (CRUD). También tiene la posibilidad de crear gastos compartidos introduciendo el correo electrónico de otros usuarios; estos gastos aparecerán en una vista llamada **Gastos compartidos**.
+**Spend Tracker** es una aplicación full‑stack (MERN) para registrar y gestionar gastos personales y compartidos. Permite a los usuarios **crear, leer, actualizar y eliminar (CRUD)** gastos y compartir gastos con otros usuarios introduciendo su correo electrónico (se muestran en la vista **Gastos compartidos**).
 
-El usuario debe crear una cuenta y iniciar sesión para poder acceder a la aplicación. Esto generará un token que se guardará en las cookies para posteriores procesos de autenticación.
+El registro e inicio de sesión generan un token JWT que se guarda en **cookies** para autenticar solicitudes posteriores.
 
-## Requisitos Previos
+---
 
-Antes de ejecutar el proyecto, asegúrate de tener instaladas las siguientes herramientas:
+## 🚀 Tecnologías
 
-- Node.js (versión recomendada: 18.x o superior)
-- npm (incluido con Node.js)
-- MongoDB en funcionamiento (puedes usar un servicio como MongoDB Atlas o una instalación local)
+- **Frontend:** React, Vite, Tailwind
+- **Backend:** Node.js, Express
+- **Base de datos:** MongoDB
 
-## Correr el Proyecto
+---
 
-### 1. Instalación de Dependencias
+## ✅ Requisitos previos
 
-Antes de iniciar el proyecto, es necesario instalar las dependencias del cliente y del servidor. Para ello, ejecuta el siguiente comando desde la carpeta raíz del proyecto:
+- Node.js (recomendado 18.x o superior)
+- npm
+- MongoDB corriendo localmente o en un servicio (MongoDB Atlas)
+
+---
+
+## 🔧 Configuración y ejecución
+
+1. Instalar dependencias (desde la raíz del proyecto):
 
 ```bash
 npm run install
 ```
 
-Este comando ejecutará los scripts de instalación que instalarán las dependencias tanto para el cliente como para el backend.
+> Este script ejecuta `install-frontend` y `install-backend` y se encargará de instalar las dependencias del `frontend` y del `backend`.
 
-### 2. Iniciar la Aplicación
+2. Crear variables de entorno para el backend en `backend/.env` (ejemplo):
 
-Una vez que las dependencias estén instaladas, puedes iniciar la aplicación con el siguiente comando:
-
-```bash
-npm run start
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/SpendTracker
+JWT_SECRET=tu_clave_secreta
+PORT=3000
 ```
 
-Este comando ejecuta varios procesos de instalación y levanta tanto el backend como el frontend.
+3. Iniciar los servicios (en terminales separadas o pestañas):
 
-### package.json (Raíz)
+- Backend:
+
+```bash
+npm run start-backend
+# -> Servidor en http://127.0.0.1:3000
+```
+
+- Frontend:
+
+```bash
+npm run start-frontend
+# -> Vite en http://127.0.0.1:5173/
+```
+
+### Salida esperada
+
+Al arrancar deberías ver mensajes similares a:
+
+```
+➞  Local:   http://127.0.0.1:5173/
+Servidor corriendo en http://127.0.0.1:3000
+Conexión con MongoDB exitosa
+```
+
+---
+
+## 🔒 Notas sobre autenticación
+
+- El token se almacena en **cookies**: revisa que las cookies estén configuradas con las opciones de seguridad apropiadas (Secure, SameSite) según el entorno.
+
+---
+
+## ⚠️ Recordatorio (macOS): iniciar MongoDB
+
+Si usas la instalación local en macOS:
+
+```bash
+brew services start mongodb-community@7.0
+# Para detener:
+brew services stop mongodb-community@7.0
+```
+
+---
+
+### package.json (raíz)
 
 ```json
 {
@@ -44,41 +96,30 @@ Este comando ejecuta varios procesos de instalación y levanta tanto el backend 
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "install": "npm run install-client && npm run install-api",
-    "install-client": "cd client && npm install",
-    "install-api": "cd backend && npm install",
-    "start": "npm run install && npm run start-client & npm run start-api",
-    "start-client": "cd client && npm run dev",
-    "start-api": "cd backend && npm run start"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+    "install": "npm run install-frontend && npm run install-backend",
+    "install-frontend": "cd frontend && npm install",
+    "install-backend": "cd backend && npm install",
+    "start-frontend": "cd frontend && npm run dev",
+    "start-backend": "cd backend && npm run start"
+  }
 }
 ```
 
-### Información Esperada
+---
 
-Cuando ejecutes `npm run start`, deberías ver la siguiente información en la terminal:
+## 🌐 App en línea
+
+- Frontend: https://spend-tracker-frontend-aqyd.onrender.com/
+- Backend: https://backend-spendtracker.onrender.com/
+
+> **Nota importante sobre Render:** Si la aplicación está desplegada en Render (especialmente en planes gratuitos), el servicio puede entrar en modo *sleep* cuando no recibe tráfico. La **primera petición** después de un periodo de inactividad puede **tardar varios segundos (o más)** mientras la instancia se inicia. Si necesitas comprobar que el servicio esté activo, abre la URL del backend en el navegador o ejecuta:
 
 ```bash
-➞  Local:   http://127.0.0.1:5173/
-➞  Network: use --host to expose
-Servidor corriendo en http://127.0.0.1:3000
-Conexión con MongoDB exitosa
+curl -I https://backend-spendtracker.onrender.com/
 ```
 
-- **Local**: Esta es la URL donde podrás ver y usar la aplicación de manera completa, incluyendo tanto el cliente como el backend.
-- **Servidor corriendo**: Esta línea indica que la versión original de la API está funcionando y proporciona un punto de referencia para la documentación de los endpoints, así como un mensaje de feedback de la conexión a la base de datos MongoDB.
+> Esto "despertará" el servicio; ten en cuenta que la respuesta puede tardar y que esto es un comportamiento normal en planes con instancias en reposo.
 
-## Notas Adicionales
+---
 
-- El token de autenticación se guarda en las cookies para mantener la sesión del usuario entre solicitudes.
-- Para verificar que el token se maneja correctamente, asegúrate de que las cookies estén configuradas para que sean seguras y tengan una política de SameSite apropiada.
-
-### No olvidar iniciar mongoDb
-
-MacOS: brew services start mongodb-community@7.0
-
-brew services stop mongodb-community@7.0
+Si querés, puedo dejar una versión más detallada con ejemplos de endpoints o instrucciones para probar con Postman.
