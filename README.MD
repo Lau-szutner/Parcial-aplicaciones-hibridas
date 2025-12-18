@@ -112,7 +112,7 @@ brew services stop mongodb-community@7.0
 - Frontend: https://spend-tracker-frontend-aqyd.onrender.com/
 - Backend: https://backend-spendtracker.onrender.com/
 
-> **Nota importante sobre Render:** Si la aplicación está desplegada en Render (especialmente en planes gratuitos), el servicio puede entrar en modo *sleep* cuando no recibe tráfico. La **primera petición** después de un periodo de inactividad puede **tardar varios segundos (o más)** mientras la instancia se inicia. Si necesitas comprobar que el servicio esté activo, abre la URL del backend en el navegador o ejecuta:
+> **Nota importante sobre Render:** Si la aplicación está desplegada en Render (especialmente en planes gratuitos), el servicio puede entrar en modo _sleep_ cuando no recibe tráfico. La **primera petición** después de un periodo de inactividad puede **tardar varios segundos (o más)** mientras la instancia se inicia. Si necesitas comprobar que el servicio esté activo, abre la URL del backend en el navegador o ejecuta:
 
 ```bash
 curl -I https://backend-spendtracker.onrender.com/
@@ -122,4 +122,8 @@ curl -I https://backend-spendtracker.onrender.com/
 
 ---
 
-Si querés, puedo dejar una versión más detallada con ejemplos de endpoints o instrucciones para probar con Postman.
+### Datos para acceder al Backend:
+
+ruta: /backOffice
+user: root@gmail.com
+clave: root
