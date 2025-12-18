@@ -25,7 +25,7 @@ function App() {
     const storedToken = getTokenFromCookies();
     const storedEmail = Cookies.get('email');
 
-    if (storedToken) setToken(storedToken);
+    if (storedToken) setToken(storedToken.data);
     if (storedEmail) setEmail(storedEmail);
   }, []);
 
