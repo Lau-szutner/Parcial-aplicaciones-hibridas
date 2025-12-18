@@ -28,6 +28,7 @@ const Navbar = ({ userEmail, token, setToken, setShowWelcome, setEmail }) => {
       isActive ? 'bg-green-500' : 'bg-green-900'
     }`;
 
+  console.log(token);
   return (
     <header className="w-full bg-green-700 shadow-lg z-50 ">
       <nav className="mx-auto flex justify-between py-3 px-10 h-20">
@@ -44,7 +45,7 @@ const Navbar = ({ userEmail, token, setToken, setShowWelcome, setEmail }) => {
         </div>
 
         {/* Navegación: solo si hay token */}
-        {token && (
+        {token !== null && (
           <ul className="flex items-center gap-6 w-fit">
             <li>
               <NavLink to="/gastos" className={linkClass}>

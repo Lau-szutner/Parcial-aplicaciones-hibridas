@@ -1,6 +1,10 @@
 import TotalUsers from '../components/backoffice/TotalUsers';
 import LoginAdmin from '../components/backoffice/LoginAdmin';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
+
+// Usamos la variable de entorno para construir las rutas de la API
+const API_URL = import.meta.env.VITE_API_URL;
 
 const BackOffice = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -11,7 +15,7 @@ const BackOffice = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:3000/auth/backOffice', {
+    const res = await fetch(`${API_URL}/auth/backOffice`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -24,12 +28,17 @@ const BackOffice = () => {
       return;
     }
 
+    // Guardar token y email en cookies para que las llamadas protegidas puedan usarlas
+    if (data.token) {
+      Cookies.set('token', data.token, { expires: 7 });
+      Cookies.set('email', email, { expires: 7 });
+    }
+
     setIsAdmin(true);
   };
 
   return (
     <>
-      <h1>Prueba</h1>
       {isAdmin ? (
         <TotalUsers />
       ) : (

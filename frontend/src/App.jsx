@@ -29,6 +29,20 @@ function App() {
     if (storedEmail) setEmail(storedEmail);
   }, []);
 
+  console.log(email);
+
+  if (location.pathname === '/backOffice') {
+    return (
+      <div className="min-h-screen flex flex-col bg-stone-800 text-white">
+        <main className="flex-grow flex">
+          <section className="flex-grow overflow-auto p-6">
+            <BackOffice />
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-stone-800 text-white">
       {/* Navbar */}
