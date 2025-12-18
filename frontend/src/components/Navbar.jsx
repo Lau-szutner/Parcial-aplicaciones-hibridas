@@ -1,31 +1,36 @@
-import { getTokenFromCookies } from '../lib/utils';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-const Navbar = ({ userEmail }) => {
-  let token = getTokenFromCookies();
-  const location = useLocation();
+const Navbar = ({ userEmail, token, setToken, setShowWelcome, setEmail }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Obtener todas las cookies
-    const allCookies = Cookies.get(); // devuelve un objeto { cookieName: value, ... }
+    // Eliminar cookies importantes
+    Cookies.remove('token');
+    Cookies.remove('email');
+    Cookies.remove('chartData');
+    Cookies.remove('chartMonth');
+    Cookies.remove('spendsMonth');
+    Cookies.remove('spendsSaved');
 
-    // Eliminar todas
-    Object.keys(allCookies).forEach((cookieName) => {
-      Cookies.remove(cookieName);
-    });
-
-    // Resetear estados
+    // Resetear estados en el padre
     setToken(null);
-    // setEmail('');
+    setEmail(''); // <- Limpiar email
     setShowWelcome(false);
+
+    // Redirigir al home
     navigate('/');
   };
 
+  // Clase dinámica para resaltar ruta activa
+  const linkClass = ({ isActive }) =>
+    `text-white font-medium transition-colors duration-200 p-2 rounded-md hover:bg-green-600 ${
+      isActive ? 'bg-green-500' : 'bg-green-900'
+    }`;
+
   return (
-    <header className="w-full bg-green-700 shadow-lg z-50">
-      <nav className="mx-auto flex justify-between py-3 px-10">
+    <header className="w-full bg-green-700 shadow-lg z-50 ">
+      <nav className="mx-auto flex justify-between py-3 px-10 h-20">
         {/* Logo y título */}
         <div className="flex items-center gap-4">
           <div className="flex flex-col leading-tight">
@@ -33,62 +38,37 @@ const Navbar = ({ userEmail }) => {
               Spend Tracker
             </span>
             <span className="text-white font-light text-sm truncate max-w-[200px]">
-              {userEmail}
+              {userEmail || ''}
             </span>
           </div>
         </div>
 
-        {/* Navegación */}
-        {token.data === undefined && (
+        {/* Navegación: solo si hay token */}
+        {token && (
           <ul className="flex items-center gap-6 w-fit">
-            {location.pathname !== '/backOffice' && (
-              <>
-                <li>
-                  <a
-                    href="/gastos"
-                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
-                      location.pathname == '/gastos'
-                        ? 'bg-green-500'
-                        : 'bg-green-900'
-                    }`}
-                  >
-                    Gastos
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/graficos"
-                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600  ${
-                      location.pathname == '/graficos'
-                        ? 'bg-green-500'
-                        : 'bg-green-900'
-                    }`}
-                  >
-                    Gráficos
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="/gastosCompartidos"
-                    className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md hover:bg-green-600 ${
-                      location.pathname == '/gastosCompartidos'
-                        ? 'bg-green-500'
-                        : 'bg-green-900'
-                    }`}
-                  >
-                    Gastos compartidos
-                  </a>
-                </li>
-              </>
-            )}
-            <button
-              onClick={() => handleLogout()}
-              className={`text-white font-medium  transition-colors duration-200  p-2 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer
-            }`}
-            >
-              Logout
-            </button>
+            <li>
+              <NavLink to="/gastos" className={linkClass}>
+                Gastos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/graficos" className={linkClass}>
+                Gráficos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/gastosCompartidos" className={linkClass}>
+                Gastos compartidos
+              </NavLink>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="text-white font-medium transition-colors duration-200 p-2 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer"
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         )}
       </nav>
